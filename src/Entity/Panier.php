@@ -15,10 +15,6 @@ class Panier
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\OneToOne(inversedBy: 'panier', targetEntity: Utilisateurs::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private $Utilisateurs;
-
     #[ORM\ManyToMany(targetEntity: Produits::class, inversedBy: 'paniers')]
     private $Produits;
 

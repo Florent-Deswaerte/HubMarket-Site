@@ -30,7 +30,6 @@ class Produits
     #[ORM\ManyToMany(targetEntity: Categories::class, mappedBy: 'Produits')]
     private $Categories;
 
-    #[ORM\ManyToMany(targetEntity: Utilisateurs::class, inversedBy: 'produits')]
     private $Utilisateurs;
 
     #[ORM\ManyToMany(targetEntity: Panier::class, mappedBy: 'Produits')]

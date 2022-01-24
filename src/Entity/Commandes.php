@@ -24,7 +24,6 @@ class Commandes
     #[ORM\Column(type: 'float')]
     private $TotalCommande;
 
-    #[ORM\ManyToOne(targetEntity: Utilisateurs::class, inversedBy: 'Utilisateurs')]
     #[ORM\JoinColumn(nullable: false)]
     private $Utilisateurs;
 

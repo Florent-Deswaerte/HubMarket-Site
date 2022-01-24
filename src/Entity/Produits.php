@@ -33,11 +33,6 @@ class Produits
     #[ORM\ManyToMany(targetEntity: Panier::class, mappedBy: 'Produits')]
     private $paniers;
 
-    #[ORM\ManyToMany(targetEntity: Utilisateurs::class, mappedBy: 'produits')]
-    private $utilisateurs;
-
-
-
     public function __construct()
     {
         $this->Produits = new ArrayCollection();

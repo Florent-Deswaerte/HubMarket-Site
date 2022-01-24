@@ -27,7 +27,6 @@ class Commandes
     #[ORM\OneToMany(mappedBy: 'Commandes', targetEntity: LCommandes::class)]
     private $Commandes;
 
-    #[ORM\ManyToOne(targetEntity: Utilisateurs::class, inversedBy: 'commande')]
     private $utilisateurs;
 
     public function __construct()

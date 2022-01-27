@@ -33,7 +33,7 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'utilisateurs', targetEntity: Commandes::class)]
     private $commande;
 
-    #[ORM\OneToOne(targetEntity: Panier::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'utilisateurs', targetEntity: Panier::class, cascade: ['persist', 'remove'])]
     private $panier;
 
     #[ORM\ManyToMany(targetEntity: Produits::class, inversedBy: 'utilisateurs')]

@@ -24,11 +24,17 @@ class Commandes
     #[ORM\Column(type: 'float')]
     private $TotalCommande;
 
+<<<<<<< HEAD
     #[ORM\JoinColumn(nullable: false)]
     private $Utilisateurs;
 
+=======
+>>>>>>> b290a8135694e0ba591d6b55d27af8b546356079
     #[ORM\OneToMany(mappedBy: 'Commandes', targetEntity: LCommandes::class)]
     private $Commandes;
+
+    #[ORM\ManyToOne(targetEntity: Utilisateurs::class, inversedBy: 'commande')]
+    private $utilisateurs;
 
     public function __construct()
     {

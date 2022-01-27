@@ -30,10 +30,16 @@ class Produits
     #[ORM\ManyToMany(targetEntity: Categories::class, mappedBy: 'Produits')]
     private $Categories;
 
+<<<<<<< HEAD
     private $Utilisateurs;
 
+=======
+>>>>>>> b290a8135694e0ba591d6b55d27af8b546356079
     #[ORM\ManyToMany(targetEntity: Panier::class, mappedBy: 'Produits')]
     private $paniers;
+
+    #[ORM\ManyToMany(targetEntity: Utilisateurs::class, mappedBy: 'produits')]
+    private $utilisateurs;
 
 
 
@@ -44,6 +50,7 @@ class Produits
         $this->Categories = new ArrayCollection();
         $this->Utilisateurs = new ArrayCollection();
         $this->paniers = new ArrayCollection();
+        $this->utilisateurs = new ArrayCollection();
 
     }
 

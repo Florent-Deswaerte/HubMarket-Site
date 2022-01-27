@@ -27,7 +27,7 @@
         "symfony/property-access": "5.4.*",
         "symfony/property-info": "5.4.*",
         "symfony/proxy-manager-bridge": "5.4.*",
-        "symfony/runtime": "5.4.*",
+        "symfony/runtime": "^6.0",
         "symfony/security-bundle": "5.4.*",
         "symfony/serializer": "5.4.*",
         "symfony/twig-bundle": "5.4.*",
@@ -83,6 +83,8 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.36"
+        "symfony/maker-bundle": "^1.36",
+        "symfony/stopwatch": "5.4.*",
+        "symfony/web-profiler-bundle": "5.4.*"
     }
 }

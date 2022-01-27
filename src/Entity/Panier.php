@@ -15,9 +15,12 @@ class Panier
     #[ORM\Column(type: 'integer')]
     private $id;
 
+<<<<<<< HEAD
     #[ORM\JoinColumn(nullable: false)]
     private $Utilisateurs;
 
+=======
+>>>>>>> b290a8135694e0ba591d6b55d27af8b546356079
     #[ORM\ManyToMany(targetEntity: Produits::class, inversedBy: 'paniers')]
     private $Produits;
 

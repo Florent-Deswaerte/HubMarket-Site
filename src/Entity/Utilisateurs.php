@@ -43,6 +43,7 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->commande = new ArrayCollection();
         $this->produits = new ArrayCollection();
+        $this->roles = ["ROLE_USER"];
     }
 
     public function getId(): ?int

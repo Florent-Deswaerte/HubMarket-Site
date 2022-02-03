@@ -10,12 +10,6 @@ use OpenApi\Annotations as OA;
 
 class APIUtilities extends AbstractController
 {
-    #[Route('/api', name: 'api')]
-    public function interface(): Response
-    {
-        return $this->render('api/index.html', []);
-    }
-
     public function formatData($object)
     {
         $dataArray = array();
@@ -32,8 +26,9 @@ class APIUtilities extends AbstractController
         return $dataArray;
     }
 
-    public function JSONResponse(string $jsonData) : Response
+    public function JSONResponse(array $arr) : Response
     {
+        $jsonData = json_encode($arr, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         return new Response( 
             $jsonData,
             Response::HTTP_OK,
@@ -49,6 +44,14 @@ class APIUtilities extends AbstractController
         return new Response( 
             $info,
             Response::HTTP_NOT_FOUND,
+        );
+    }
+
+    public function NotAuthorizedResponse(string $info) : Response
+    {
+        return new Response( 
+            $info,
+            '401',
         );
     }
 }

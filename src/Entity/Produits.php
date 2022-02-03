@@ -30,13 +30,11 @@ class Produits
     #[ORM\ManyToMany(targetEntity: Categories::class, mappedBy: 'Produits')]
     private $Categories;
 
-    #[ORM\ManyToMany(targetEntity: Utilisateurs::class, inversedBy: 'produits')]
-    private $Utilisateurs;
-
     #[ORM\ManyToMany(targetEntity: Panier::class, mappedBy: 'Produits')]
     private $paniers;
 
-
+    #[ORM\ManyToMany(targetEntity: Utilisateurs::class, mappedBy: 'produits')]
+    private $utilisateurs;
 
     public function __construct()
     {
@@ -45,6 +43,7 @@ class Produits
         $this->Categories = new ArrayCollection();
         $this->Utilisateurs = new ArrayCollection();
         $this->paniers = new ArrayCollection();
+        $this->utilisateurs = new ArrayCollection();
 
     }
 
@@ -162,30 +161,6 @@ class Produits
     }
 
     /**
-     * @return Collection|Utilisateurs[]
-     */
-    public function getUtilisateurs(): Collection
-    {
-        return $this->Utilisateurs;
-    }
-
-    public function addUtilisateur(Utilisateurs $utilisateur): self
-    {
-        if (!$this->Utilisateurs->contains($utilisateur)) {
-            $this->Utilisateurs[] = $utilisateur;
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisateur(Utilisateurs $utilisateur): self
-    {
-        $this->Utilisateurs->removeElement($utilisateur);
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Panier[]
      */
     public function getPaniers(): Collection
@@ -207,6 +182,33 @@ class Produits
     {
         if ($this->paniers->removeElement($panier)) {
             $panier->removeProduit($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Utilisateurs[]
+     */
+    public function getUtilisateurs(): Collection
+    {
+        return $this->utilisateurs;
+    }
+
+    public function addUtilisateur(Utilisateurs $utilisateur): self
+    {
+        if (!$this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs[] = $utilisateur;
+            $utilisateur->addProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUtilisateur(Utilisateurs $utilisateur): self
+    {
+        if ($this->utilisateurs->removeElement($utilisateur)) {
+            $utilisateur->removeProduit($this);
         }
 
         return $this;

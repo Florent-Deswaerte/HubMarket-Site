@@ -24,12 +24,10 @@ class Commandes
     #[ORM\Column(type: 'float')]
     private $TotalCommande;
 
-    #[ORM\ManyToOne(targetEntity: Utilisateurs::class, inversedBy: 'Utilisateurs')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $Utilisateurs;
-
     #[ORM\OneToMany(mappedBy: 'Commandes', targetEntity: LCommandes::class)]
     private $Commandes;
+
+    private $utilisateurs;
 
     public function __construct()
     {
@@ -77,18 +75,6 @@ class Commandes
         return $this;
     }
 
-    public function getUtilisateurs(): ?Utilisateurs
-    {
-        return $this->Utilisateurs;
-    }
-
-    public function setUtilisateurs(?Utilisateurs $Utilisateurs): self
-    {
-        $this->Utilisateurs = $Utilisateurs;
-
-        return $this;
-    }
-
     /**
      * @return Collection|LCommandes[]
      */
@@ -115,6 +101,18 @@ class Commandes
                 $commande->setCommandes(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUtilisateurs(): ?Utilisateurs
+    {
+        return $this->utilisateurs;
+    }
+
+    public function setUtilisateurs(?Utilisateurs $utilisateurs): self
+    {
+        $this->utilisateurs = $utilisateurs;
 
         return $this;
     }

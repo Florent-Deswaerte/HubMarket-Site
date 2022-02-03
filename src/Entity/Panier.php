@@ -15,12 +15,11 @@ class Panier
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\OneToOne(inversedBy: 'panier', targetEntity: Utilisateurs::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private $Utilisateurs;
-
     #[ORM\ManyToMany(targetEntity: Produits::class, inversedBy: 'paniers')]
     private $Produits;
+
+    #[ORM\OneToOne(mappedBy: 'panier', targetEntity: Utilisateurs::class, cascade: ['persist', 'remove'])]
+    private $utilisateurs;
 
     public function __construct()
     {
@@ -30,18 +29,6 @@ class Panier
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUtilisateurs(): ?Utilisateurs
-    {
-        return $this->Utilisateurs;
-    }
-
-    public function setUtilisateurs(Utilisateurs $Utilisateurs): self
-    {
-        $this->Utilisateurs = $Utilisateurs;
-
-        return $this;
     }
 
     /**
@@ -64,6 +51,28 @@ class Panier
     public function removeProduit(Produits $produit): self
     {
         $this->Produits->removeElement($produit);
+
+        return $this;
+    }
+
+    public function getUtilisateurs(): ?Utilisateurs
+    {
+        return $this->utilisateurs;
+    }
+
+    public function setUtilisateurs(?Utilisateurs $utilisateurs): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($utilisateurs === null && $this->utilisateurs !== null) {
+            $this->utilisateurs->setPanier(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($utilisateurs !== null && $utilisateurs->getPanier() !== $this) {
+            $utilisateurs->setPanier($this);
+        }
+
+        $this->utilisateurs = $utilisateurs;
 
         return $this;
     }

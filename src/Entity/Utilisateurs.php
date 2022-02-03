@@ -6,151 +6,159 @@ use App\Repository\UtilisateursRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ */
 #[ORM\Entity(repositoryClass: UtilisateursRepository::class)]
-class Utilisateurs
+class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $Nom;
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    private $email;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $Prenom;
+    #[ORM\Column(type: 'json')]
+    private $roles = [];
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $Adresse;
+    #[ORM\Column(type: 'string')]
+    private $password;
 
-    #[ORM\Column(type: 'integer')]
-    private $Code_Postal;
+    #[ORM\OneToMany(mappedBy: 'utilisateurs', targetEntity: Commandes::class)]
+    private $commande;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $Pays;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private $Mdp;
-
-    #[ORM\OneToMany(mappedBy: 'Utilisateurs', targetEntity: Commandes::class)]
-    private $Utilisateurs;
-
-    #[ORM\OneToOne(mappedBy: 'Utilisateurs', targetEntity: Panier::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'utilisateurs', targetEntity: Panier::class, cascade: ['persist', 'remove'])]
     private $panier;
 
-    #[ORM\ManyToMany(targetEntity: Produits::class, mappedBy: 'Utilisateurs')]
+    #[ORM\ManyToMany(targetEntity: Produits::class, inversedBy: 'utilisateurs')]
     private $produits;
-
 
     public function __construct()
     {
-        $this->Utilisateurs = new ArrayCollection();
+        $this->commande = new ArrayCollection();
         $this->produits = new ArrayCollection();
+        $this->roles = ["ROLE_USER"];
     }
-
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getEmail(): ?string
     {
-        return $this->Nom;
+        return $this->email;
     }
 
-    public function setNom(string $Nom): self
+    public function setEmail(string $email): self
     {
-        $this->Nom = $Nom;
-
-        return $this;
-    }
-
-    public function getPrenom(): ?string
-    {
-        return $this->Prenom;
-    }
-
-    public function setPrenom(string $Prenom): self
-    {
-        $this->Prenom = $Prenom;
-
-        return $this;
-    }
-
-    public function getAdresse(): ?string
-    {
-        return $this->Adresse;
-    }
-
-    public function setAdresse(string $Adresse): self
-    {
-        $this->Adresse = $Adresse;
-
-        return $this;
-    }
-
-    public function getCodePostal(): ?int
-    {
-        return $this->Code_Postal;
-    }
-
-    public function setCodePostal(int $Code_Postal): self
-    {
-        $this->Code_Postal = $Code_Postal;
-
-        return $this;
-    }
-
-    public function getPays(): ?string
-    {
-        return $this->Pays;
-    }
-
-    public function setPays(string $Pays): self
-    {
-        $this->Pays = $Pays;
-
-        return $this;
-    }
-
-    public function getMdp(): ?string
-    {
-        return $this->Mdp;
-    }
-
-    public function setMdp(string $Mdp): self
-    {
-        $this->Mdp = $Mdp;
+        $this->email = $email;
 
         return $this;
     }
 
     /**
-     * @return Collection|Commandes[]
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
      */
-    public function getUtilisateurs(): Collection
+    public function getUserIdentifier(): string
     {
-        return $this->Utilisateurs;
+        return (string) $this->email;
     }
 
-    public function addUtilisateur(Commandes $utilisateur): self
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
     {
-        if (!$this->Utilisateurs->contains($utilisateur)) {
-            $this->Utilisateurs[] = $utilisateur;
-            $utilisateur->setUtilisateurs($this);
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection|Commandes[]
+     */
+    public function getCommande(): Collection
+    {
+        return $this->commande;
+    }
+
+    public function addCommande(Commandes $commande): self
+    {
+        if (!$this->commande->contains($commande)) {
+            $this->commande[] = $commande;
+            $commande->setUtilisateurs($this);
         }
 
         return $this;
     }
 
-    public function removeUtilisateur(Commandes $utilisateur): self
+    public function removeCommande(Commandes $commande): self
     {
-        if ($this->Utilisateurs->removeElement($utilisateur)) {
+        if ($this->commande->removeElement($commande)) {
             // set the owning side to null (unless already changed)
-            if ($utilisateur->getUtilisateurs() === $this) {
-                $utilisateur->setUtilisateurs(null);
+            if ($commande->getUtilisateurs() === $this) {
+                $commande->setUtilisateurs(null);
             }
         }
 
@@ -162,13 +170,8 @@ class Utilisateurs
         return $this->panier;
     }
 
-    public function setPanier(Panier $panier): self
+    public function setPanier(?Panier $panier): self
     {
-        // set the owning side of the relation if necessary
-        if ($panier->getUtilisateurs() !== $this) {
-            $panier->setUtilisateurs($this);
-        }
-
         $this->panier = $panier;
 
         return $this;
@@ -186,7 +189,6 @@ class Utilisateurs
     {
         if (!$this->produits->contains($produit)) {
             $this->produits[] = $produit;
-            $produit->addUtilisateur($this);
         }
 
         return $this;
@@ -194,11 +196,8 @@ class Utilisateurs
 
     public function removeProduit(Produits $produit): self
     {
-        if ($this->produits->removeElement($produit)) {
-            $produit->removeUtilisateur($this);
-        }
+        $this->produits->removeElement($produit);
 
         return $this;
     }
-
 }

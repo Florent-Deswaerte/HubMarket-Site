@@ -19,6 +19,19 @@ class FournisseursRepository extends ServiceEntityRepository
         parent::__construct($registry, Fournisseurs::class);
     }
 
+    /**
+    * @return Fournisseurs Returns an array of Fournisseurs objects
+    */
+    public function findOneByID($value): ?Fournisseurs
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     // /**
     //  * @return Fournisseurs[] Returns an array of Fournisseurs objects
     //  */

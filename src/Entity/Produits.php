@@ -33,6 +33,12 @@ class Produits
     #[ORM\ManyToMany(targetEntity: Panier::class, mappedBy: 'Produits')]
     private $paniers;
 
+<<<<<<< HEAD
+=======
+    #[ORM\ManyToMany(targetEntity: Utilisateurs::class, mappedBy: 'produits')]
+    private $utilisateurs;
+
+>>>>>>> origin/Florent
     public function __construct()
     {
         $this->Produits = new ArrayCollection();
@@ -158,30 +164,6 @@ class Produits
     }
 
     /**
-     * @return Collection|Utilisateurs[]
-     */
-    public function getUtilisateurs(): Collection
-    {
-        return $this->Utilisateurs;
-    }
-
-    public function addUtilisateur(Utilisateurs $utilisateur): self
-    {
-        if (!$this->Utilisateurs->contains($utilisateur)) {
-            $this->Utilisateurs[] = $utilisateur;
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisateur(Utilisateurs $utilisateur): self
-    {
-        $this->Utilisateurs->removeElement($utilisateur);
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Panier[]
      */
     public function getPaniers(): Collection
@@ -203,6 +185,33 @@ class Produits
     {
         if ($this->paniers->removeElement($panier)) {
             $panier->removeProduit($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Utilisateurs[]
+     */
+    public function getUtilisateurs(): Collection
+    {
+        return $this->utilisateurs;
+    }
+
+    public function addUtilisateur(Utilisateurs $utilisateur): self
+    {
+        if (!$this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs[] = $utilisateur;
+            $utilisateur->addProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUtilisateur(Utilisateurs $utilisateur): self
+    {
+        if ($this->utilisateurs->removeElement($utilisateur)) {
+            $utilisateur->removeProduit($this);
         }
 
         return $this;

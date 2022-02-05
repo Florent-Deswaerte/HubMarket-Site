@@ -203,4 +203,18 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getData(): array
+    {
+        $data = array(
+            'id'=>$this->id,
+            'email'=>$this->email,
+            'roles'=>$this->roles,
+            'password'=>$this->password,
+            'panier'=>$this->panier,
+            'produits'=>$this->produits,
+            'commande'=>$this->commande
+        );
+        return $data;
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\ApiController;
+namespace App\Controller\ApiControllers;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Persistence\ManagerRegistry;

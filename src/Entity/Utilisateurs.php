@@ -15,7 +15,105 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
-#[ApiResource]
+#[ApiResource(
+    normalizationContext:['groups' => ['read:User']],
+    collectionOperations: [
+        'get' => [
+            'method' => 'GET',
+            'path' => '/users',
+            'route_name' => 'apiGetUsersList',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => 'Récupère la liste des utilisateurs',
+                'parameters' => [],
+            ],
+        ],
+        'post' => [
+            'method' => 'post',
+            'path' => '/users/create',
+            'route_name' => 'apiCreateUser',
+            'openapi_context' => [
+                'summary' => 'Crée un utilisateur',
+                'description' => 'Crée un utilisateur',
+                'parameters' => [
+                    [
+                        'in' => 'query',
+                        'name' => 'email',
+                        'description' => 'Email de l\'utilisateur',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ],
+                    [
+                        'in' => 'query',
+                        'name' => 'password',
+                        'description' => 'Mot de passe de l\'utilisateur',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ]
+                ],
+                'requestBody' => [
+                    'content' => [],
+                ]
+            ]
+        ],
+        'getUserByEmail' => [
+            'method' => 'GET',
+            'path' => '/users/email/{email}',
+            'route_name' => 'apiGetUserByEmail',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => 'Récupère un utilisateur par son email',
+                'description' => 'Récupère un utilisateur par son email',
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'email',
+                        'description' => 'Email de l\'utilisateur',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ]
+                ]
+            ]
+        ] 
+    ],
+    itemOperations: [
+        'get' => [
+            'method' => 'GET',
+            'path' => '/users/id/{id}',
+            'route_name' => 'apiGetUserById',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => "Récupère un utilisateur par son id",
+                'parameters' => [],
+            ],
+        ],
+        'patch'=> [
+            'openapi_context' => [
+                'summary' => 'Modifie un utilisateur',
+                'description' => 'Modifie un utilisateur'
+            ]
+        ],
+        'delete'=> [
+            'method' => 'DELETE',
+            'path' => '/users/delete/id/{id}',
+            'route_name' => 'apiDeleteUser',
+            'filters' => [],
+            'openapi_context' => [
+                'summary' => 'Supprime un utilisateur',
+                'description' => 'Supprime un utilisateur'
+            ]
+        ]
+    ],
+)]
 #[ORM\Entity(repositoryClass: UtilisateursRepository::class)]
 class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
 {

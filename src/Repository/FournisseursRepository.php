@@ -20,13 +20,55 @@ class FournisseursRepository extends ServiceEntityRepository
     }
 
     /**
-    * @return Fournisseurs Returns an array of Fournisseurs objects
+    * @return Fournisseurs|null Returns an array of Fournisseurs objects
     */
-    public function findOneByID($value): ?Fournisseurs
+    public function findOneById($value): ?Fournisseurs
     {
         return $this->createQueryBuilder('f')
             ->andWhere('f.id = :val')
             ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+    * @return Fournisseurs[] Returns an array of Fournisseurs objects
+    */
+    public function findByPays($value): ?Fournisseurs
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.pays = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+    * @return Fournisseurs[] Returns an array of Fournisseurs objects
+    */
+    public function findByCodePostal($value): ?Fournisseurs
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.code_postal = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+    * @return Fournisseurs|null Returns an array of Fournisseurs objects
+    */
+    public function findOneByLibelle($value): ?Fournisseurs
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.libelle = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
             ->getQuery()
             ->getOneOrNullResult()
         ;

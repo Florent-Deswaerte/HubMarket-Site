@@ -19,6 +19,48 @@ class ProduitsRepository extends ServiceEntityRepository
         parent::__construct($registry, Produits::class);
     }
 
+    /**
+    * @return Produits|null Returns an array of Produits objects
+    */
+    public function findOneById($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.id = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+    * @return Produits|null Returns an array of Produits objects
+    */
+    public function findOneByName($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.nom = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+    * @return Produits[] Returns an array of Produits objects
+    */
+    public function findByQuantity($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.qty = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Produits[] Returns an array of Produits objects
     //  */

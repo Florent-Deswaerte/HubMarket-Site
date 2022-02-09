@@ -17,4 +17,29 @@ class ProduitsApiController extends AbstractController
 {
     public function __construct(private ProduitsRepository $produitsRepository, private APIUtilities $apiUtilities, private UtilityController $utilities)
     {}
+
+    // POST
+    public function postProduit(){
+
+    }
+
+    // PATCH
+    public function patchProduit(){
+
+    }
+
+    //DELETE
+    public function deleteProduit(){
+        
+    }
+
+    // GET (by identifier)
+    public function getProduitById(){
+
+    }
+
+    // GET
+    public function getAllProduit(){
+
+    }
 }

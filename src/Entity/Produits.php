@@ -2,12 +2,72 @@
 
 namespace App\Entity;
 
-use App\Repository\ProduitsRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProduitsRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: ProduitsRepository::class)]
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'method' => 'GET',
+            'path' => '/produits',
+            'route_name' => 'apiGetProduits',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => 'Récupère la liste des produits',
+                'parameters' => [],
+            ],
+        ],
+        'post' => [
+            'method' => 'POST',
+            'path' => '/produits',
+            'route_name' => 'apiPostProduit',
+            'openapi_context' => [
+                'summary' => 'Crée un produit',
+                'description' => 'Crée un produit',
+                'parameters' => [
+                    [
+                        'in' => 'query',
+                        'name' => 'fournisseur',
+                        'description' => 'Nom du fournisseur',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ],
+                    [
+                        'in' => 'query',
+                        'name' => 'nom',
+                        'description' => 'Nom du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ],
+                    [
+                        'in' => 'query',
+                        'name' => 'categorie',
+                        'description' => 'Nom de la catégorie du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ]
+                ],
+                'requestBody' => [
+                    'content' => [],
+                ]
+            ]
+        ],
+    ],
+    itemOperations: [
+
+    ]
+)]
 class Produits
 {
     #[ORM\Id]

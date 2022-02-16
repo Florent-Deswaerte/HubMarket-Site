@@ -213,8 +213,8 @@ class Produits
     #[ORM\ManyToMany(targetEntity: Panier::class, mappedBy: 'Produits')]
     private $paniers;
 
-    #[ORM\ManyToMany(targetEntity: Utilisateurs::class, mappedBy: 'produits')]
-    private $utilisateurs;
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2)]
+    private $prix;
 
     public function __construct()
     {
@@ -235,6 +235,18 @@ class Produits
     public function getNom(): ?string
     {
         return $this->Nom;
+    }
+
+    public function getPrix(): ?string
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(string $prix): self
+    {
+        $this->prix = $prix;
+
+        return $this;
     }
 
     public function setNom(string $Nom): self

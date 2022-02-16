@@ -14,14 +14,8 @@ use App\Entity\Produits;
 #[Route('/produits', name: 'produits_')]
 class ProduitsController extends AbstractController
 {
-    private $produitsRepository;
-    private $helper;
-
-    public function __construct(ProduitsRepository $produitsRepository, HelperController $helper)
-    {
-        $this->produitsRepository = $produitsRepository;
-        $this->helper = $helper;
-    }
+    public function __construct(private ProduitsRepository $produitsRepository, private HelperController $helper)
+    {}
     
     #[Route('/', name: 'index')]
     public function index(): Response

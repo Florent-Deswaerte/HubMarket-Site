@@ -37,10 +37,10 @@ class CategoriesRepository extends ServiceEntityRepository
     /**
     * @return Categories|null Returns an array of Categories objects
     */
-    public function findOneByName($value)
+    public function findOneByName($value): ?Categories
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.nom = :val')
+            ->andWhere('c.Nom = :val')
             ->setParameter('val', $value)
             ->orderBy('c.id', 'ASC')
             ->getQuery()

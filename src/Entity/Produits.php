@@ -56,16 +56,136 @@ use Doctrine\Common\Collections\ArrayCollection;
                         'schema' => [
                             'type' => 'string'
                         ]
-                    ]
+                    ],
+                    [
+                        'in' => 'query',
+                        'name' => 'qty',
+                        'description' => 'Quantité du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ],
                 ],
                 'requestBody' => [
                     'content' => [],
                 ]
             ]
         ],
+        'getProduitsByName' => [
+            'method' => 'GET',
+            'path' => '/produits/name/{name}',
+            'controller' => 'apiGetProduitsByName',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => "Récupère un produit par son nom",
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'name',
+                        'description' => 'Nom du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ]
+                ]
+            ],
+        ],
     ],
     itemOperations: [
-
+        'patchUser'=> [
+            'method' => 'PATCH',
+            'filters' => [],
+            'openapi_context' => [
+                'summary' => 'Modifie un produit',
+                'description' => 'Modifie un produit',
+                'parameters' => [
+                    [
+                        'in' => 'query',
+                        'name' => 'fournisseur',
+                        'description' => 'Nom du fournisseur',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ],
+                    [
+                        'in' => 'query',
+                        'name' => 'nom',
+                        'description' => 'Nom du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ],
+                    [
+                        'in' => 'query',
+                        'name' => 'categorie',
+                        'description' => 'Nom de la catégorie du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ],
+                    [
+                        'in' => 'query',
+                        'name' => 'qty',
+                        'description' => 'Quantité du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ],
+                ],
+                'requestBody' => [
+                    'content' => [],
+                ]
+            ]
+        ],
+        'getProduitById' => [
+            'method' => 'GET',
+            'path' => '/produits/{id}',
+            'route_name' => 'apiGetProduitById',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => "Récupère un produit par son id",
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'id',
+                        'description' => 'Identifiant du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ]
+                ]
+            ],
+        ],
+        'deleteProduit'=> [
+            'method' => 'DELETE',
+            'path' => '/produits/{id}',
+            'route_name' => 'apiDeleteProduit',
+            'filters' => [],
+            'openapi_context' => [
+                'summary' => 'Supprime un produit',
+                'description' => 'Supprime un produit',
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'id',
+                        'description' => 'Identifiant du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ]
+                ]
+            ]
+        ]
     ]
 )]
 class Produits
@@ -274,4 +394,18 @@ class Produits
         return $this;
     }
 
+    public function getData(): array
+    {
+        $data = array(
+            'id'=>$this->getId(),
+            'nom'=>$this->getNom(),
+            'qty'=>$this->getQty(),
+            'produits'=>$this->getProduits(),
+            'fournisseurs'=>$this->getFournisseurs(),
+            'categories'=>$this->getCategories(),
+            'paniers'=>$this->getPaniers(),
+            'utilisateurs'=>$this->getUtilisateurs(),
+        );
+        return $data;
+    }
 }

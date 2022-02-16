@@ -26,12 +26,38 @@ class APIUtilities extends AbstractController
         return $dataArray;
     }
 
-    public function JSONResponse(array $arr) : Response
+    public function JSONResponseCreated(array $arr) : Response
+    {
+        $jsonData = json_encode($arr, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        return new Response( 
+            $jsonData,
+            Response::HTTP_CREATED,
+            [
+                'content-type' => 'application/json',
+                'charset' => "utf-8",
+            ]
+        );
+    }
+
+    public function JSONResponseOk(array $arr) : Response
     {
         $jsonData = json_encode($arr, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         return new Response( 
             $jsonData,
             Response::HTTP_OK,
+            [
+                'content-type' => 'application/json',
+                'charset' => "utf-8",
+            ]
+        );
+    }
+
+    public function JSONResponseDeleted(array $arr) : Response
+    {
+        $jsonData = json_encode($arr, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        return new Response( 
+            $jsonData,
+            204,
             [
                 'content-type' => 'application/json',
                 'charset' => "utf-8",

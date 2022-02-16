@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ApiResource(
     normalizationContext:['groups' => ['read:User']],
     collectionOperations: [
-        'get' => [
+        'getUsers' => [
             'method' => 'GET',
             'path' => '/users',
             'route_name' => 'apiGetUsersList',
@@ -29,9 +29,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
                 'parameters' => [],
             ],
         ],
-        'post' => [
+        'postUser' => [
             'method' => 'post',
-            'path' => '/users/create',
+            'path' => '/users',
             'route_name' => 'apiCreateUser',
             'openapi_context' => [
                 'summary' => 'Crée un utilisateur',
@@ -61,6 +61,27 @@ use Symfony\Component\Security\Core\User\UserInterface;
                 ]
             ]
         ],
+        'getUserById' => [
+            'method' => 'GET',
+            'path' => '/users/{id}',
+            'route_name' => 'apiGetUserById',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => "Récupère un utilisateur par son id",
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'id',
+                        'description' => 'Identifiant de l\'utilisateur',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ]
+                ]
+            ],
+        ],
         'getUserByEmail' => [
             'method' => 'GET',
             'path' => '/users/email/{email}',
@@ -85,26 +106,16 @@ use Symfony\Component\Security\Core\User\UserInterface;
         ] 
     ],
     itemOperations: [
-        'get' => [
-            'method' => 'GET',
-            'path' => '/users/id/{id}',
-            'route_name' => 'apiGetUserById',
-            'filters' => [],
-            'pagination_enabled' => false,
-            'openapi_context' => [
-                'summary' => "Récupère un utilisateur par son id",
-                'parameters' => [],
-            ],
-        ],
-        'patch'=> [
+        'patchUser'=> [
+            'method' => 'PATCH',
             'openapi_context' => [
                 'summary' => 'Modifie un utilisateur',
                 'description' => 'Modifie un utilisateur'
             ]
         ],
-        'delete'=> [
+        'deleteUser'=> [
             'method' => 'DELETE',
-            'path' => '/users/delete/id/{id}',
+            'path' => '/users/{id}',
             'route_name' => 'apiDeleteUser',
             'filters' => [],
             'openapi_context' => [

@@ -7,7 +7,7 @@ use App\Repository\FournisseursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\ApiControllers\APIUtilities;
-use App\Controller\UtilitiesControllers\UtilityController;
+use App\Controller\HelperControllers\HelperController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[AsController]
 class FournisseursApiController extends AbstractController
 {
-    public function __construct(private FournisseursRepository $fournisseursRepository, private APIUtilities $apiUtilities, private UtilityController $utilities)
+    public function __construct(private FournisseursRepository $fournisseursRepository, private APIUtilities $apiUtilities, private HelperController $utilities)
     {}
 }

@@ -66,9 +66,9 @@ class FournisseursRepository extends ServiceEntityRepository
     public function findOneByLibelle($value): ?Fournisseurs
     {
         return $this->createQueryBuilder('f')
-            ->andWhere('f.libelle = :val')
+            ->andWhere('f.Libelle = :val')
             ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
+            ->orderBy('f.id', 'ASC')
             ->getQuery()
             ->getOneOrNullResult()
         ;

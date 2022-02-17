@@ -2,18 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\Produits;
 use App\Form\ProduitsFormType;
 use App\Repository\ProduitsRepository;
+use App\Repository\CategoriesRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\HelperControllers\HelperController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Entity\Produits;
 
 #[Route('/produits', name: 'produits_')]
 class ProduitsController extends AbstractController
 {
+
     public function __construct(private ProduitsRepository $produitsRepository, private HelperController $helper)
     {}
     

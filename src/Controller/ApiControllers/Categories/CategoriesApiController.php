@@ -15,6 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[AsController]
 class CategoriesApiController extends AbstractController
 {
-    public function __construct(private CategoriesRepository $categoriesRepository, private APIUtilities $apiUtilities, private HelperController $utilities)
+    public function __construct(private CategoriesRepository $categoriesRepository, private APIUtilities $apiUtilities, private HelperController $helper)
     {}
 }

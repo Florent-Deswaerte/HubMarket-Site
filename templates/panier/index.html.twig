@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PanierController!{% endblock %}
+{% block title %}{{parent()}}Panier{% endblock %}
 
 {% block body %}
 <style>
@@ -14,14 +14,27 @@
     Ajouter un article dans le panier :
     {% if panier is null %}
         <h1>Si panier == NULL</h1>
-        <button>Créer et ajoute au panier</button>
+        <button id="createPanier">Créer et ajoute au panier</button>
     {% else %}
         <h1>Si panier != NULL</h1>
-        <button>Ajoute au panier</button>
+        Quelle quantité voulez vous ? 
+        <button id="addPanier">Ajoute au panier</button>
+
+        {% for produit in produits %}
+            <div>
+                <td>{{produit.nom}}</td>
+                <td>{{produit.qty}}</td>
+                <td>{{produit.prix}}</td>
+                <p hidden id="prix">{{ produit.prix }}</p>
+                <button id="supprimerProduit">Supprimer le produits du panier</button>
+            </div>
+        {% endfor %}
     {% endif %}
     <ul>
         <li>Your controller at <code><a href="{{ '/var/www/html/HubMarket-Site/src/Controller/PanierController.php'|file_link(0) }}">src/Controller/PanierController.php</a></code></li>
         <li>Your template at <code><a href="{{ '/var/www/html/HubMarket-Site/templates/panier/index.html.twig'|file_link(0) }}">templates/panier/index.html.twig</a></code></li>
     </ul>
+
+    <button id="validerPanier">Valider le panier</button>
 </div>
 {% endblock %}

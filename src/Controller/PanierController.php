@@ -23,9 +23,11 @@ class PanierController extends AbstractController
     {
         $panier = $this->getUser()->getPanier();
         //dd($panier);
+        $panierProduits = $panier->getProduits();
         return $this->render('panier/index.html.twig', [
             'controller_name' => 'PanierController',
-            'panier' => $panier
+            'panier' => $panier,
+            'produits' => $panierProduits,
         ]);
     }
 }

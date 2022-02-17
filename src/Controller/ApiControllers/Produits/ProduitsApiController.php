@@ -2,7 +2,6 @@
 namespace App\Controller\ApiControllers\Produits;
 
 use App\Entity\Produits;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ProduitsRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,7 +34,7 @@ class ProduitsApiController extends AbstractController
     // POST
     #[Route("/api/produits", name: 'apiPostProduit', methods: 'POST')]
     public function postProduit(Request $request){
-        $produit = new Produits();
+        $produit = new Produits(); //
         $nomFournisseur = $request->get('fournisseur');
         $nomCategorie = $request->get('categorie');
         $nomProduit = $request->get('nom');
@@ -48,7 +47,7 @@ class ProduitsApiController extends AbstractController
             $categorie = $this->categoriesRepository->findOneByName($nomCategorie);
             if(!is_null($categorie)){
                 $produit->addCategory($categorie);
-                $this->utilities->saveEntityObject($produit);
+                $this->utilities->saveEntityObject($produit); //
                 $data = $this->apiUtilities->formatData($produit);
                 $responseArray = array('api:responseCode'=>201, 'api:responseInfo' => "Le produit a bien été créé", 'api:membersCount'=>1,'api:members' => $data ); 
                 return $this->apiUtilities->JSONResponseCreated($responseArray);

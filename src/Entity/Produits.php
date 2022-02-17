@@ -219,8 +219,8 @@ class Produits
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $image;
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Image::class)]
+    private $images;
 
     public function __construct()
     {
@@ -230,7 +230,7 @@ class Produits
         $this->Utilisateurs = new ArrayCollection();
         $this->paniers = new ArrayCollection();
         $this->utilisateurs = new ArrayCollection();
-
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -439,14 +439,32 @@ class Produits
         return $this;
     }
 
-    public function getImage(): ?string
+    /**
+     * @return Collection|Image[]
+     */
+    public function getImages(): Collection
     {
-        return $this->image;
+        return $this->images;
     }
 
-    public function setImage(string $image): self
+    public function addImage(Image $image): self
     {
-        $this->image = $image;
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getProduit() === $this) {
+                $image->setProduit(null);
+            }
+        }
 
         return $this;
     }

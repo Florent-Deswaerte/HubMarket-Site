@@ -15,6 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[AsController]
 class FournisseursApiController extends AbstractController
 {
-    public function __construct(private FournisseursRepository $fournisseursRepository, private APIUtilities $apiUtilities, private HelperController $utilities)
+    public function __construct(private FournisseursRepository $fournisseursRepository, private APIUtilities $apiUtilities, private HelperController $helper)
     {}
 }

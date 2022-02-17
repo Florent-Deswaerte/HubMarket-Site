@@ -213,8 +213,14 @@ class Produits
     #[ORM\ManyToMany(targetEntity: Panier::class, mappedBy: 'Produits')]
     private $paniers;
 
-    #[ORM\ManyToMany(targetEntity: Utilisateurs::class, mappedBy: 'produits')]
-    private $utilisateurs;
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2)]
+    private $prix;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $description;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $image;
 
     public function __construct()
     {
@@ -235,6 +241,18 @@ class Produits
     public function getNom(): ?string
     {
         return $this->Nom;
+    }
+
+    public function getPrix(): ?string
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(string $prix): self
+    {
+        $this->prix = $prix;
+
+        return $this;
     }
 
     public function setNom(string $Nom): self
@@ -407,5 +425,29 @@ class Produits
             'utilisateurs'=>$this->getUtilisateurs(),
         );
         return $data;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
     }
 }

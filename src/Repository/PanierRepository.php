@@ -22,7 +22,10 @@ class PanierRepository extends ServiceEntityRepository
     /**
     * @return Panier
     */
+<<<<<<< HEAD
 
+=======
+>>>>>>> b60def3a38cfce9e4efbfac38bd916bda058efc8
     public function findOneById($id)
     {
         return $this->createQueryBuilder('p')

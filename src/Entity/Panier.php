@@ -23,6 +23,18 @@ use Doctrine\ORM\Mapping as ORM;
                 ]
             ]
         ],
+        'postProduit' => [
+            'method' => 'POST',
+            'path' => '/panier/add/produits/{id}',
+            'route_name' => 'apiAddPanierProduit',
+            'openapi_context' => [
+                'summary' => 'Ajouter un produit au panier',
+                'description' => 'Ajouter un produit au panier',
+                'requestBody' => [
+                    'content' => [],
+                ]
+            ]
+        ],
         'get' => [
             'method' => 'GET',
             'path' => '/panier',
@@ -63,6 +75,27 @@ use Doctrine\ORM\Mapping as ORM;
                         'in' => 'path',
                         'name' => 'id',
                         'description' => 'Identifiant du panier',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        'deletePanierProduit'=> [
+            'method' => 'DELETE',
+            'path' => '/panier/delete/produits/{id}',
+            'route_name' => 'apiDeletePanierProduit',
+            'filters' => [],
+            'openapi_context' => [
+                'summary' => 'Supprime un produit du panier',
+                'description' => 'Supprime un produit du panier',
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'id',
+                        'description' => 'Identifiant du produit',
                         'required' => true,
                         'schema' => [
                             'type' => 'integer'

@@ -4,6 +4,7 @@ namespace App\Controller\ApiControllers\Paniers;
 use App\Entity\Panier;
 use App\Entity\Produits;
 use App\Repository\PanierRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ProduitsRepository;
@@ -16,10 +17,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[AsController]
 class PaniersApiController extends AbstractController
 {
-    public function __construct(private PanierRepository $panierRepository, private ProduitsRepository $produitsRepository, private APIUtilities $apiUtilities, private HelperController $helper) {}
+    public function __construct(private PanierRepository $panierRepository, private ProduitsRepository $produitsRepository, private APIUtilities $apiUtilities, private HelperController $helper, private EntityManagerInterface $entityManager) {}
 
     // POST
-    #[Route("/api/panier", name: 'apiPostPanier')]
+    #[Route("/api/panier", name: 'apiPostPanier', methods: 'POST')]
     public function postPanier() {
         //Je récupère l'utilisateur
         $currentUser = $this->getUser();
@@ -31,8 +32,6 @@ class PaniersApiController extends AbstractController
         $currentUser->setPanier($panier);
         //Je sauvegarde l'utilisateur
         $this->helper->saveEntityObject($currentUser);
-        //J'affiche le résultat
-        dd($currentUser);
 
         $data = $this->apiUtilities->formatData($panier);
         $responseArray = array('api:responseCode'=>201, 'api:responseInfo' => "Le panier a bien été créé", 'api:membersCount'=>1,'api:members' => $data ); 
@@ -48,8 +47,6 @@ class PaniersApiController extends AbstractController
         if(empty($panier)){
             return $this->apiUtilities->NotFoundResponse("La liste est vide!");
         }
-        //J'affiche le panier
-        dd($panier);
         $data = $this->apiUtilities->formatDataArray($panier);
         $responseArray = array('api:responseCode'=>200, 'api:responseInfo' => "La liste des panier a bien été envoyée", 'api:membersCount'=>count($panier),'api:members' => $data ); 
         //Je renvoie la réponse
@@ -68,14 +65,12 @@ class PaniersApiController extends AbstractController
         $responseArray = array('api:responseCode'=>204, 'api:responseInfo' => "Le panier a bien été supprimé", 'api:membersCount'=>1,'api:members' => $data ); 
         //Je supprime le panier
         $this->utilities->removeEntityObject($panier);
-        //J'affiche le panier
-        dd($panier);
         //Je renvoie la réponse
         return $this->apiUtilities->JSONResponseDeleted($responseArray);
     }
 
     //DELETE PRODUIT DU PANIER
-    #[Route("/api/panier/delete/produits/{id}", name: 'apiDeletePanierProduit')]
+    #[Route("/api/panier/delete/produits/{id}", name: 'apiDeletePanierProduit', methods: 'DELETE')]
     public function deletePanierProduit(int $id){
         //Je récupère le panier de l'utilisateur
         $panier = $this->getUser()->getPanier();
@@ -94,14 +89,12 @@ class PaniersApiController extends AbstractController
         $responseArray = array('api:responseCode'=>204, 'api:responseInfo' => "Le produit a bien été supprimé", 'api:membersCount'=>1,'api:members' => $data ); 
         //Je push les données
         $this->entityManager->flush();
-        //J'affiche le panier
-        dd($panier);
         //Je renvoie la réponse
         return $this->apiUtilities->JSONResponseDeleted($responseArray);
     }
 
     //POST PRODUIT DU PANIER
-    #[Route("/api/panier/add/produits/{id}", name: 'apiAddPanierProduit')]
+    #[Route("/api/panier/add/produits/{id}", name: 'apiAddPanierProduit', methods: 'POST')]
     public function postPanierProduit(int $id){
         //Je récupère le panier de l'utilisateur
         $panier = $this->getUser()->getPanier();
@@ -123,8 +116,6 @@ class PaniersApiController extends AbstractController
         $responseArray = array('api:responseCode'=>204, 'api:responseInfo' => "Le produit a bien été ajouté", 'api:membersCount'=>1,'api:members' => $data ); 
         //Je push les données
         $this->entityManager->flush();
-        //J'affiche le panier
-        dd($panier);
         //Je renvoie la réponse
         return $this->apiUtilities->JSONResponseDeleted($responseArray);
     }

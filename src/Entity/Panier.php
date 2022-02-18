@@ -30,6 +30,17 @@ use Doctrine\ORM\Mapping as ORM;
             'openapi_context' => [
                 'summary' => 'Ajouter un produit au panier',
                 'description' => 'Ajouter un produit au panier',
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'id',
+                        'description' => 'Identifiant du panier',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ]
+                        ],
                 'requestBody' => [
                     'content' => [],
                 ]

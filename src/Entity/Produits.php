@@ -227,7 +227,6 @@ class Produits
         $this->Produits = new ArrayCollection();
         $this->Fournisseurs = new ArrayCollection();
         $this->Categories = new ArrayCollection();
-        $this->Utilisateurs = new ArrayCollection();
         $this->paniers = new ArrayCollection();
         $this->utilisateurs = new ArrayCollection();
         $this->images = new ArrayCollection();
@@ -385,33 +384,6 @@ class Produits
         return $this;
     }
 
-    /**
-     * @return Collection|Utilisateurs[]
-     */
-    public function getUtilisateurs(): Collection
-    {
-        return $this->utilisateurs;
-    }
-
-    public function addUtilisateur(Utilisateurs $utilisateur): self
-    {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs[] = $utilisateur;
-            $utilisateur->addProduit($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisateur(Utilisateurs $utilisateur): self
-    {
-        if ($this->utilisateurs->removeElement($utilisateur)) {
-            $utilisateur->removeProduit($this);
-        }
-
-        return $this;
-    }
-
     public function getData(): array
     {
         $data = array(
@@ -422,7 +394,6 @@ class Produits
             'fournisseurs'=>$this->getFournisseurs(),
             'categories'=>$this->getCategories(),
             'paniers'=>$this->getPaniers(),
-            'utilisateurs'=>$this->getUtilisateurs(),
         );
         return $data;
     }

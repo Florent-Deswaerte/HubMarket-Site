@@ -4,6 +4,7 @@ namespace App\Manager;
 use App\Entity\Commandes;
 use App\Entity\Produits;
 use App\Entity\Utilisateur;
+use App\Repository\CommandesRepository;
 use App\Services\StripeService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,7 +24,7 @@ class ProduitsManager
     /**
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManagerInterface $entityManager, StripeService $stripeService)
+    public function __construct(EntityManagerInterface $entityManager, StripeService $stripeService, private CommandesRepository $commandesRepository)
     {
         $this->em = $entityManager;
         $this->$stripeService = $stripeService;
@@ -36,17 +37,17 @@ class ProduitsManager
     }
     
     //Relier au Controller, pour ne pas relier le service
-    public function intentSecret(Produits $produits)
+    public function intentSecret(Commandes $commandes)
     {
-        $intent = $this->stripeService->paymentIntent($produits);
+        $intent = $this->stripeService->paymentIntent($commandes);
         //Retourne un client secret sinon null
         return $intent['client_secret'] ?? null;
     }
 
-    public function stripe(array $stripeParameter, Produits $produits)
+    public function stripe(array $stripeParameter, Commandes $commandes)
     {
         $ressource = null;
-        $data = $this->stripeService->stripe($stripeParameter, $produits);
+        $data = $this->stripeService->stripe($stripeParameter, $commandes);
         //Si data n'est pas vide
         if($data){
             //Récupérer les informations stripe
@@ -71,20 +72,13 @@ class ProduitsManager
     }
 
     //Créer une commande
-    public function create_subscription(array $ressource, Produits $produis, Utilisateur $user)
+    public function create_subscription(array $ressource, Utilisateur $user)
     {
         //Récupération de l'id de l'utilisateur
         $user_id = $user->getId();
-        //Récupération de la date de début de la commande
-        $date = new \DateTime();
-        //Création commande
-        $order = new Commandes();
-        //Insertion de l'id utilisateur
-        $order->setUtilisateurs($user_id);
-        //Insertion date de la commande
-        $order->setDateCommande($date);
-        //Insertion du total de la commande
-        $order->setTotalCommande(1515);
+        //Je récupère la commande de l'utilisateur
+        $order = $this->commandesRepository->findOneByStatus($user_id);
+
         //Insertion ressource brand de Stripe
         $order->setBrandStripe($ressource['stripeBrand']);
         //Insertion ressource last4 de Stripe

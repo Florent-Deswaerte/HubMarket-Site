@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Entity\Commandes;
 use App\Entity\Produits;
 
 class StripeService
@@ -23,14 +24,14 @@ class StripeService
      * @return \Stripe\PaymentIntent
      * @throws \Stripe\Exception\ApiErrorException
     */
-    public function paymentIntent(Produits $produits)
+    public function paymentIntent(Commandes $commandes)
     {
         //Clé privé
         \Stripe\Stripe::setApiKey($this->privateKey);
 
         return \Stripe\PaymentIntent::create([
             //Prix du produits multiplié par 100 pour avoir les bonnes conversions
-            'amount' => $produits->getPrix() * 100,
+            'amount' => $commandes->getTotalCommande() * 100,
             //Devise
             'currency' => 'eur',
             //Type de paiement
@@ -67,11 +68,11 @@ class StripeService
      * @param Produits $produits
      * @return \Stripe\PaymentIntent|null
      */
-    public function stripe(array $stripeParameter, Produits $produits){
+    public function stripe(array $stripeParameter, Commandes $commandes){
         return $this->paiement(
-            $produits->getPrix() * 100,
+            $commandes->getTotalCommande() * 100,
             'eur',
-            $produits->getNom(),
+            $commandes->getId(),
             $stripeParameter
         );
     }

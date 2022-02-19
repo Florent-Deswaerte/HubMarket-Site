@@ -5,9 +5,97 @@ namespace App\Entity;
 use App\Repository\CommandesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommandesRepository::class)]
+#[ApiResource(
+    collectionOperations: [
+        'post' => [
+            'method' => 'POST',
+            'path' => '/commandes',
+            'route_name' => 'apiPostCommandes',
+            'openapi_context' => [
+                'summary' => 'Crée une commande',
+                'description' => 'Crée une commande',
+                'requestBody' => [
+                    'content' => [],
+                ]
+            ]
+        ],
+        'postProduit' => [
+            'method' => 'POST',
+            'path' => '/commandes/add/produits/{id}',
+            'route_name' => 'apiAddCommandesProduit',
+            'openapi_context' => [
+                'summary' => 'Ajouter un produit à une commande',
+                'description' => 'Ajouter un produit à une commande',
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'id',
+                        'description' => 'Identifiant de la commande',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ]
+                        ],
+                'requestBody' => [
+                    'content' => [],
+                ]
+            ]
+        ],
+        'get' => [
+            'method' => 'GET',
+            'path' => '/commandes/get',
+            'route_name' => 'apiGetCommandes',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => 'Récupère la liste des commandes',
+                'description' => 'Récupère la liste des commandes',
+                'parameters' => [],
+            ],
+        ],
+    ],
+    itemOperations: [
+        'patchCommandes'=> [
+            'method' => 'PATCH',
+            'filters' => [],
+            'openapi_context' => [
+                'summary' => 'Modifie une commande',
+                'description' => 'Modifie un commande',
+                'parameters' => [
+                ],
+                'requestBody' => [
+                    'content' => [],
+                ]
+            ]
+        ],
+        'deleteCommandes'=> [
+            'method' => 'DELETE',
+            'path' => '/commandes/{id}',
+            'route_name' => 'apiDeleteCommandes',
+            'filters' => [],
+            'openapi_context' => [
+                'summary' => 'Supprime une commande',
+                'description' => 'Supprime une commande',
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'id',
+                        'description' => 'Identifiant du panier',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ]
+                ]
+            ]
+        ],
+    ]
+)]
 class Commandes
 {
     #[ORM\Id]
@@ -191,5 +279,18 @@ class Commandes
         $this->status_stripe = $status_stripe;
 
         return $this;
+    }
+
+    public function getData(): array
+    {
+        $data = array(
+            'id'=>$this->getId(),
+            'date_commande'=>$this->getDateCommande(),
+            'date_arrivee'=>$this->getDateArrivee(),
+            'total_commande'=>$this->getTotalCommande(),
+            'utilisateurs'=>$this->getUtilisateurs(),
+            'status'=>$this->getStatusStripe(),
+        );
+        return $data;
     }
 }

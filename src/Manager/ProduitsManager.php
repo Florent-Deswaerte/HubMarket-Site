@@ -12,23 +12,10 @@ use Doctrine\ORM\EntityManagerInterface;
 class ProduitsManager
 {
     /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    /**
-     * @var StripeService
-     */
-    protected $stripeService;
-
-    /**
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManagerInterface $entityManager, StripeService $stripeService, private CommandesRepository $commandesRepository)
-    {
-        $this->em = $entityManager;
-        $this->$stripeService = $stripeService;
-    }
+    public function __construct(private EntityManagerInterface $entityManager, private StripeService $stripeService, private CommandesRepository $commandesRepository)
+    {}
 
     //Récupère tous les produits
     public function getProduits()

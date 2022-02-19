@@ -2,19 +2,19 @@
 
 namespace App\Controller;
 
-use App\Controller\ApiControllers\Produits\ProduitsApiController;
-use App\Repository\PanierRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Produits;
-use App\Entity\Panier;
 use App\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
-use App\Controller\HelperControllers\HelperController;
+use App\Entity\Panier;
+use App\Entity\Produits;
 use App\Entity\Commandes;
 use App\Manager\ProduitsManager;
+use App\Repository\PanierRepository;
 use App\Repository\CommandesRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\HelperControllers\HelperController;
+use App\Controller\ApiControllers\Produits\ProduitsApiController;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/panier', name: 'panier_')]
 class PanierController extends AbstractController
@@ -58,23 +58,23 @@ class PanierController extends AbstractController
     }
 
     //Page du paiement
-    #[Route('/paiement', name: 'paiement')]
-    public function panierPaiement(Commandes $commandes, ProduitsManager $produitsManager): Response
+    #[Route('/paiement/{id}', name: 'paiement')]
+    public function panierPaiement(int $id, ProduitsManager $produitsManager): Response
     {
+        $commande = $this->commandesRepository->findOneById($id);
         //Si pas connecté alors redirigé sur la page login
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
         //Récupération information utilisateur
-        $utilisateur1 = $this->getUser();
-        $utilisateur = $utilisateur1->getData();
+        $utilisateur = $this->getUser()->getData();
         
         //Récupération de la commande
-        $intent_secret = $produitsManager->intentSecret($commandes);
+        $intent_secret = $produitsManager->intentSecret($commande);
 
         return $this->render('panier/details.html.twig', [
             'utilisateur' => $utilisateur,
-            'commandes' => $commandes,
+            'commande' => $commande,
             'intentSecret' => $intent_secret
         ]);
     }

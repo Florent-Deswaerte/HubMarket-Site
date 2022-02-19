@@ -19,7 +19,7 @@
         <!--Info commande-->
         <!--Total prix-->
         <!--Total prix-->
-    <a href="{{path('panier_paiement')}}">Acheter</a>
+    <a href="{{path('panier_paiement', { 'id': commande.id })}}">Acheter</a>
     <button id="Paiement" onclick="/paiement">Acheter</button>
 </div>
 {% endblock %}

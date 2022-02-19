@@ -18,6 +18,7 @@ class PanierController extends AbstractController
     public function __construct(private PanierRepository $panierRepository, private HelperController $helper)
     {}
 
+    //Page du récapitulatif du panier de l'utilisateur
     #[Route('/', name: 'index')]
     public function index(): Response
     {
@@ -28,6 +29,29 @@ class PanierController extends AbstractController
             'controller_name' => 'PanierController',
             'panier' => $panier,
             'produits' => $panierProduits,
+        ]);
+    }
+    //Page contenant les informations personnelles de l'utilisateur
+    #[Route('/details', name: 'details')]
+    public function panierDetails(): Response
+    {
+        $utilisateur1 = $this->getUser();
+        $utilisateur = $utilisateur1->getData();
+        //dd($utilisateur);
+        return $this->render('panier/details.html.twig', [
+            'utilisateur' => $utilisateur,
+        ]);
+    }
+
+    //Page du paiement
+    #[Route('/paiement', name: 'paiement')]
+    public function panierPaiement(): Response
+    {
+        $utilisateur1 = $this->getUser();
+        $utilisateur = $utilisateur1->getData();
+        //dd($utilisateur);
+        return $this->render('panier/details.html.twig', [
+            'utilisateur' => $utilisateur,
         ]);
     }
 }

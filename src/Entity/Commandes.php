@@ -18,7 +18,7 @@ class Commandes
     #[ORM\Column(type: 'date')]
     private $DateCommande;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'date', nullable: true)]
     private $DateArrivee;
 
     #[ORM\Column(type: 'float')]

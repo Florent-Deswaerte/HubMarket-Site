@@ -59,7 +59,7 @@ class ProduitsManager
     }
 
     //Créer une commande
-    public function create_subscription(array $ressource, Utilisateur $user)
+    public function create_subscription(array $ressource, Commandes $commandes, Utilisateur $user)
     {
         //Récupération de l'id de l'utilisateur
         $user_id = $user->getId();

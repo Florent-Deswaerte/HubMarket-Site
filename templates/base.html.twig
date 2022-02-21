@@ -25,27 +25,9 @@
             <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
         {% endblock %}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-            <!-- Js Plugins -->
-            <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
-            <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-            <script src="{{ asset('js/jquery.nice-select.min.js') }}"></script>
-            <script src="{{ asset('js/jquery.nicescroll.min.js') }}"></script>
-            <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
-            <script src="{{ asset('js/jquery.countdown.min.js') }}"></script>
-            <script src="{{ asset('js/jquery.slicknav.js') }}"></script>
-            <script src="{{ asset('js/mixitup.min.js') }}"></script>
-            <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
-            <script src="{{ asset('js/main.js') }}"></script>
-            <script src="{{ asset('js/panier.js') }}"></script>
-        {% endblock %}
+        
     </head>
     <body>
-        <!-- Page Preloder -->
-        <div id="preloder">
-            <div class="loader"></div>
-        </div>
         <!-- Header Section Begin -->
         <header class="header">
             <div class="header__top">
@@ -64,7 +46,7 @@
                                     <a href="{{path('app_login')}}"> <img src="{{ asset('img/icon/user.png') }}" style="margin-right:10px;">Connexion</a>
                                 {% else %}
                                     <div class="row">
-                                        <p style="color:white;">{{ app.user.username }}ssssssssssssssssssssssss</p>
+                                        <p style="color:white;">{{ app.user.username }}</p>
                                         <a href="{{path('app_logout')}}" style="margin-left:10px;"> <img src="{{ asset('img/icon/deconnexion.png') }}"></a>
                                     </div>
                                 {% endif %}
@@ -116,5 +98,21 @@
         <!-- Header Section End -->
     {% block body %}
     {% endblock %}
+    {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+            <!-- Js Plugins -->
+            <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+            <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.nice-select.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.nicescroll.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.countdown.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.slicknav.js') }}"></script>
+            <script src="{{ asset('js/mixitup.min.js') }}"></script>
+            <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
+            <script src="{{ asset('js/main.js') }}"></script>
+            <script src="{{ asset('js/panier.js') }}"></script>
+            <script src="//js.stripe.com/v3/"></script>
+        {% endblock %}
     </body>
 </html>

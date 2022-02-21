@@ -41,9 +41,11 @@ class PanierController extends AbstractController
         ]);
     }
     //Page contenant les informations personnelles de l'utilisateur
-    #[Route('/details', name: 'details')]
-    public function panierDetails(): Response
+    #[Route('/details/{id}', name: 'details')]
+    public function panierDetails(int $id): Response
     {
+        //Cherche la commande avec cette id
+        $commande = $this->commandesRepository->findOneById($id);
         //Si pas connecté alors redirigé sur la page login
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
@@ -54,6 +56,7 @@ class PanierController extends AbstractController
         //dd($utilisateur);
         return $this->render('panier/details.html.twig', [
             'utilisateur' => $utilisateur,
+            'commande' => $commande
         ]);
     }
 
@@ -61,6 +64,7 @@ class PanierController extends AbstractController
     #[Route('/paiement/{id}', name: 'paiement')]
     public function panierPaiement(int $id, ProduitsManager $produitsManager): Response
     {
+        //Cherche la commande avec cette id
         $commande = $this->commandesRepository->findOneById($id);
         //Si pas connecté alors redirigé sur la page login
         if(!$this->getUser()){
@@ -72,10 +76,37 @@ class PanierController extends AbstractController
         //Récupération de la commande
         $intent_secret = $produitsManager->intentSecret($commande);
 
-        return $this->render('panier/details.html.twig', [
+        return $this->render('panier/paiement.html.twig', [
             'utilisateur' => $utilisateur,
             'commande' => $commande,
             'intentSecret' => $intent_secret
         ]);
+    }
+
+    //Action formulaire
+    #[Route('/subscription/{id}', name: 'subscription_paiement')]
+    public function panierSubscription(Commandes $commande, Request $request, ProduitsManager $produitsManager): Response
+    {
+        //Si pas connecté alors redirigé sur la page login
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
+        //Récupération information utilisateur
+        $utilisateur = $this->getUser();
+        if($request->getMethod()=== "POST"){
+            //Retourner la ressource et faire le traitement
+            $ressource = $produitsManager->stripe($_POST, $commande);
+            //Si ressource différent de null
+            if(null!= $ressource){
+                //Créer la commande
+                $produitsManager->create_subscription($ressource, $commande, $utilisateur);
+                //Retourne une réponse
+                return $this->render('panier/reponse.html.twig', [
+                    'commande'=>$commande
+                ]);
+            }
+        }
+
+        return $this->redirectToRoute('panier_paiement', ['id'=> $commande->getId()]);
     }
 }

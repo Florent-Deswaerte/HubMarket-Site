@@ -29,14 +29,14 @@ class StripeService
         //Clé privé
         \Stripe\Stripe::setApiKey($this->privateKey);
 
-        return \Stripe\PaymentIntent::create([
+        dd(\Stripe\PaymentIntent::create([
             //Prix du produits multiplié par 100 pour avoir les bonnes conversions
             'amount' => $commandes->getTotalCommande() * 100,
             //Devise
             'currency' => 'eur',
             //Type de paiement
             'payment_method_types' => ['card']
-        ]);
+        ]));
     }
 
     //Déclencher le paiement

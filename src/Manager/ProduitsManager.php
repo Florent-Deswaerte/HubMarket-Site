@@ -66,6 +66,8 @@ class ProduitsManager
         //Je récupère la commande de l'utilisateur
         $order = $this->commandesRepository->findOneByStatus($user_id);
 
+        dd($order);
+
         //Insertion ressource brand de Stripe
         $order->setBrandStripe($ressource['stripeBrand']);
         //Insertion ressource last4 de Stripe

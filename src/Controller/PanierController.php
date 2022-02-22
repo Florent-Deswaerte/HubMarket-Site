@@ -85,8 +85,10 @@ class PanierController extends AbstractController
 
     //Action formulaire
     #[Route('/subscription/{id}', name: 'subscription_paiement')]
-    public function panierSubscription(Commandes $commande, Request $request, ProduitsManager $produitsManager): Response
+    public function panierSubscription(int $id, Request $request, ProduitsManager $produitsManager): Response
     {
+        dd($request);
+        $commande = $this->commandesRepository->findById($id);
         //Si pas connecté alors redirigé sur la page login
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
@@ -95,7 +97,7 @@ class PanierController extends AbstractController
         $utilisateur = $this->getUser();
         if($request->getMethod()=== "POST"){
             //Retourner la ressource et faire le traitement
-            $ressource = $produitsManager->stripe($_POST, $commande);
+            $ressource = $produitsManager->stripe($request->request->all(), $commande);
             //Si ressource différent de null
             if(null!= $ressource){
                 //Créer la commande
@@ -107,6 +109,6 @@ class PanierController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('panier_paiement', ['id'=> $commande->getId()]);
+        return $this->redirectToRoute('panier_paiement', ['id'=> $id]);
     }
 }

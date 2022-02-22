@@ -170,24 +170,47 @@
         $button.parent().find('input').val(newVal);
     });
 
+    //====================== Quantité Prix Panier ======================
+    //Récupère la classe .pro-qty-2 (La quantité du produit)
     var proQty = $('.pro-qty-2');
+    //Span bouton pour enlever 1
     proQty.prepend('<span class="fa fa-angle-left dec qtybtn"></span>');
+    //Span bouton pour ajouter 1
     proQty.append('<span class="fa fa-angle-right inc qtybtn"></span>');
+    //Function clique des boutons
     proQty.on('click', '.qtybtn', function() {
         var $button = $(this);
+        var $total = $('.total-class');
+        console.log($total);
         var oldValue = $button.parent().find('input').val();
+
+        //Récupère la classe .pro-qty-prix (Le prix du produit)
+        var proPrix = $('.pro-qty-prix')[0].innerText;
+        console.log(proPrix);
+
+        //Récupère la classe .cart__price (Le total du produit)
+        var proTotal = $('.cart__price')[0].innerText;
+
         if ($button.hasClass('inc')) {
             var newVal = parseFloat(oldValue) + 1;
+            var proTotalCalcul = proPrix * newVal;
+            $total.parent().find('h4').val(proTotalCalcul);
         } else {
-            // Don't allow decrementing below zero
+            // Pas décrémenter en dessous de 0
             if (oldValue > 0) {
                 var newVal = parseFloat(oldValue) - 1;
+                var proTotalCalcul = proPrix * newVal;
+                $('.cart__price')[0].innerText = proTotalCalcul;
             } else {
                 newVal = 0;
             }
         }
         $button.parent().find('input').val(newVal);
+        $total.parent().find('h4').val(proTotalCalcul);
     });
+    /*------------------
+        Fin Quantité Prix
+    --------------------*/
 
     /*------------------
         Achieve Counter

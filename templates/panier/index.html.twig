@@ -3,38 +3,125 @@
 {% block title %}{{parent()}}Panier{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    Ajouter un article dans le panier :
     {% if panier is null %}
         <h1>Si panier == NULL</h1>
-        <button id="createPanier">Créer et ajoute au panier</button>
+        <button id="createPanier">Créer et ajoute au panier et reload page</button>
     {% else %}
-        <h1>Si panier != NULL</h1>
-        Quelle quantité voulez vous ? 
-        <button id="addPanier">Ajoute au panier</button>
-
-        {% for produit in produits %}
-            <div>
-                <td>{{produit.nom}}</td>
-                <td>{{produit.qty}}</td>
-                <td>{{produit.prix}}</td>
-                <p hidden id="prix">{{ produit.prix }}</p>
-                <button id="supprimerProduit">Supprimer le produits du panier</button>
+        <!-- Section Chemin accès -->
+        <section class="breadcrumb-option">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="breadcrumb__text">
+                            <h4>Panier</h4>
+                            <div class="breadcrumb__links">
+                                <a href="{{path('accueil')}}">Accueil</a>
+                                <span>Panier</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        {% endfor %}
-    {% endif %}
-    <ul>
-        <li>Your controller at <code><a href="{{ '/var/www/html/HubMarket-Site/src/Controller/PanierController.php'|file_link(0) }}">src/Controller/PanierController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/var/www/html/HubMarket-Site/templates/panier/index.html.twig'|file_link(0) }}">templates/panier/index.html.twig</a></code></li>
-    </ul>
+        </section>
+        <!-- Fin Section Chemin accès -->
 
-    <button id="validerPanier" onclick="/details">Valider le panier</button>
-</div>
+        <!-- Section Panier -->
+        <section class="shopping-cart spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="shopping__cart__table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <!--Légende-->
+                                        <th>Produit</th>
+                                        <th>Quantité</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                        <!--Fin Légende-->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    {% for produit in produits %}
+                                        <tr>
+                                            <td class="product__cart__item">
+                                                <div class="product__cart__item__pic">
+                                                <!--Image du produit-->
+                                                    <img src="{{ asset('img/shopping-cart/cart-1.jpg') }}" alt="">
+                                                </div>
+                                                <!--Fin Image du produit-->
+
+                                                <div class="product__cart__item__text">
+                                                    <!--Nom du produit-->
+                                                    <h6>{{produit.nom}}</h6>
+                                                    <!--Fin Nom du produit-->  
+
+                                                    <!--Prix du produit-->
+                                                    <h5 class="pro-qty-prix">{{produit.prix}}</h5>
+                                                    <!--Fin Prix du produit-->
+                                                </div>
+                                            </td>
+                                        <!--Quantité du produit-->
+                                        <td class="quantity__item">
+                                            <div class="quantity">
+                                                <div class="pro-qty-2">
+                                                    
+                                                    <input type="text" value="{{produit.qty}}">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <!--Fin Quantité du produit-->
+
+                                        <!--Total du produit-->
+                                        <td class="cart__price">
+                                            <h4 class="total-class">{{produit.prix}}<h4>
+                                        </td>
+                                        <!--Fin Total du produit-->
+
+                                        <!--Supprimer du produit-->
+                                        <td class="cart__close"><i class="fa fa-close"></i></td>
+                                        <!--Fin Supprimer du produit-->
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--Bouton continuer les achats-->
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="continue__btn">
+                                    <a href="{{ path('accueil') }}">Continuer les achats</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Fin Bouton continuer les achats-->
+                    </div>
+                    <div class="col-lg-4">
+                        <!--Code promo-->
+                        <div class="cart__discount">
+                            <h6>Code Promo</h6>
+                            <form action="#">
+                                <input type="text" placeholder="Entrez le code">
+                                <button type="submit">Appliquer</button>
+                            </form>
+                        </div>
+                        <!--Fin Code promo-->
+
+                        <!--Total du panier-->
+                        <div class="cart__total">
+                            <h6>Total Panier</h6>
+                            <ul>
+                                <li>Total <span>$ 169.50</span></li>
+                            </ul>
+                            <a href="#" class="primary-btn">Paiement</a>
+                        </div>
+                        <!--Fin Total du panier-->
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Fin Section Panier -->
+    {% endif %}
 {% endblock %}

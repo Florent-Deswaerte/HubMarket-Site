@@ -36,6 +36,66 @@ class UtilisateursRepository extends ServiceEntityRepository implements Password
         $this->_em->flush();
     }
 
+    /**
+     * @return Utilisateurs[]
+     */
+    public function findByID(int $id): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT u
+            FROM App\Entity\User u
+            WHERE u.id = :id'
+        )->setParameter('id', $id);
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return Utilisateurs[]
+     */
+    public function findByEmail(string $email): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT u
+            FROM App\Entity\User u
+            WHERE u.email = :email'
+        )->setParameter('email', $email);
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return Utilisateurs
+     */
+    public function findOneByID($value): ?Utilisateurs
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * @return User
+     */
+    public function findOneByEmail($value): ?Utilisateurs
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     // /**
     //  * @return Utilisateurs[] Returns an array of Utilisateurs objects
     //  */

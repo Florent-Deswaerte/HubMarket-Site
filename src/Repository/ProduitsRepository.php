@@ -19,6 +19,63 @@ class ProduitsRepository extends ServiceEntityRepository
         parent::__construct($registry, Produits::class);
     }
 
+    /**
+    * @return Produits|null Returns an array of Produits objects
+    */
+    public function findOneById($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.id = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+    * @return Produits|null Returns an array of Produits objects
+    */
+    public function findOneByName($value): ?Produits
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.Nom = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+    * @return Produits[] Returns an array of Produits objects
+    */
+    public function findByName($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.Nom = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+    * @return Produits[] Returns an array of Produits objects
+    */
+    public function findByQuantity($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.Qty = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Produits[] Returns an array of Produits objects
     //  */

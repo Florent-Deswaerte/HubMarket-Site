@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produits - Modification{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+    {{ form_widget(form.nom) }}
+    {{ form_widget(form.qty) }}
+    {{ form_widget(form.fournisseur) }}
+    {{ form_widget(form.categorie) }}
+    {{ form_widget(form.Submit) }}
+{{ form_end(form) }}
+{% endblock %}

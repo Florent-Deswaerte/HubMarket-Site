@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UtilisateursRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +15,116 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
+#[ApiResource(
+    normalizationContext:['groups' => ['read:User']],
+    collectionOperations: [
+        'getUsers' => [
+            'method' => 'GET',
+            'path' => '/users',
+            'route_name' => 'apiGetUsersList',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => 'Récupère la liste des utilisateurs',
+                'parameters' => [],
+            ],
+        ],
+        'postUser' => [
+            'method' => 'post',
+            'path' => '/users',
+            'route_name' => 'apiCreateUser',
+            'openapi_context' => [
+                'summary' => 'Crée un utilisateur',
+                'description' => 'Crée un utilisateur',
+                'parameters' => [
+                    [
+                        'in' => 'query',
+                        'name' => 'email',
+                        'description' => 'Email de l\'utilisateur',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ],
+                    [
+                        'in' => 'query',
+                        'name' => 'password',
+                        'description' => 'Mot de passe de l\'utilisateur',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ]
+                ],
+                'requestBody' => [
+                    'content' => [],
+                ]
+            ]
+        ],
+        'getUserById' => [
+            'method' => 'GET',
+            'path' => '/users/{id}',
+            'route_name' => 'apiGetUserById',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => "Récupère un utilisateur par son id",
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'id',
+                        'description' => 'Identifiant de l\'utilisateur',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ]
+                ]
+            ],
+        ],
+        'getUserByEmail' => [
+            'method' => 'GET',
+            'path' => '/users/email/{email}',
+            'route_name' => 'apiGetUserByEmail',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => 'Récupère un utilisateur par son email',
+                'description' => 'Récupère un utilisateur par son email',
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'email',
+                        'description' => 'Email de l\'utilisateur',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ]
+                ]
+            ]
+        ] 
+    ],
+    itemOperations: [
+        'patchUser'=> [
+            'method' => 'PATCH',
+            'openapi_context' => [
+                'summary' => 'Modifie un utilisateur',
+                'description' => 'Modifie un utilisateur'
+            ]
+        ],
+        'deleteUser'=> [
+            'method' => 'DELETE',
+            'path' => '/users/{id}',
+            'route_name' => 'apiDeleteUser',
+            'filters' => [],
+            'openapi_context' => [
+                'summary' => 'Supprime un utilisateur',
+                'description' => 'Supprime un utilisateur'
+            ]
+        ]
+    ],
+)]
 #[ORM\Entity(repositoryClass: UtilisateursRepository::class)]
 class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -35,9 +147,6 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(inversedBy: 'utilisateurs', targetEntity: Panier::class, cascade: ['persist', 'remove'])]
     private $panier;
-
-    #[ORM\ManyToMany(targetEntity: Produits::class, inversedBy: 'utilisateurs')]
-    private $produits;
 
     public function __construct()
     {
@@ -199,5 +308,19 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
         $this->produits->removeElement($produit);
 
         return $this;
+    }
+
+    public function getData(): array
+    {
+        $data = array(
+            'id'=>$this->id,
+            'email'=>$this->email,
+            'roles'=>$this->roles,
+            'password'=>$this->password,
+            'panier'=>$this->panier,
+            'produits'=>$this->produits,
+            'commande'=>$this->commande
+        );
+        return $data;
     }
 }

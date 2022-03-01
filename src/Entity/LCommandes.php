@@ -79,4 +79,16 @@ class LCommandes
 
         return $this;
     }
+
+    public function getData(): array
+    {
+        $data = array(
+            'id'=>$this->getId(),
+            'qty'=>$this->getQty(),
+            'prix'=>$this->getPrix(),
+            'produits'=>$this->getProduits(),
+            'commandes'=>$this->getCommandes(),
+        );
+        return $data;
+    }
 }

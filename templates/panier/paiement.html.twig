@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{parent()}}Panier{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    Paiement
+
+    <form action="{{path("panier_subscription_paiement", {'id': commande.id}) }}" method="post" id="payment-form">
+        <!--Formulaire de paiement relié au script js-->
+        <div id="card-elements"></div>
+
+        <!--Générer message erreur-->
+        <div id="card-errors" role="alert"></div>
+    <button>Acheter {{ commande.TotalCommande}} €</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="//js.stripe.com/v3/"></script>
+<script>
+    //Vérifie l'environnement et donne la clé approprié
+    {% if app_environement == 'dev' %}
+        var stripeToken = "{{ stripe_public_key_test }}";
+    {% else %}
+        var stripeToken = "{{ stripe_public_key_live }}";
+    {% endif %}
+
+    //Création des variables
+    var stripe = Stripe(stripeToken); //Récupération objet stripe et le token dedans
+    var elements = stripe.elements(); //Récupération elements objet stripe
+    var subscription = "{{ commande.id }}"; //Récupération id de la commande
+    var clientSecret = "{{ intentSecret }}"; //Récupération intentSecret
+    var cardholderEmail = "{{ utilisateur.email }}"; //Récupération email pour lier la carte à un utilisateur
+
+    console.log('client secret', clientSecret);
+
+    //Style en json
+    var styleCostum = {
+        base: {
+            fontSize: '16px',
+            color: '#25332d'
+        }
+    }
+
+    //Relier la form à l'ojet stripe
+    var card = elements.create('card', {style: styleCostum});
+    card.mount("#card-elements");
+
+    //Message erreur
+    card.addEventListener('change', function(event){
+        var displayError = document.getElementById('card-errors');
+        if(event.error){
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+
+    var form = document.getElementById("payment-form");
+    form.addEventListener("submit", function(event) {
+        //Stop le chargement de la page
+        event.preventDefault();
+
+        stripe.handleCardPayment(
+            clientSecret,
+            card,
+            {
+                payment_method_data: {
+                    billing_details: {
+                        email: cardholderEmail
+                    }
+                }
+            }
+        ).then((result) => {
+            if(result.error){
+
+            } else if ('paymentIntent' in result){
+                console.log('Result : ', result);
+                stripeTokenHandler(result.paymentIntent);
+                console.log('Result intentpayement : ', result.paymentIntent);
+            }
+        }) //Retour réponse paiement
+    });
+
+    function stripeTokenHandler(intent){
+        var form = document.getElementById("payment-form");
+        //Information à envoyer dans notre formulaire en post
+        var InputIntentId = document.createElement('input');
+        var InputIntentPaymentMethod = document.createElement('input');
+        var InputIntentStatus = document.createElement('input');
+        var InputIntentSubscription = document.createElement('input');
+
+        InputIntentId.setAttribute('type', 'hidden');
+        InputIntentId.setAttribute('name', 'stripeIntentId');
+        InputIntentId.setAttribute('value', intent.id);
+
+        InputIntentPaymentMethod.setAttribute('type', 'hidden');
+        InputIntentPaymentMethod.setAttribute('name', 'stripeIntentPaymentMethod');
+        InputIntentPaymentMethod.setAttribute('value', intent.payment_method);
+
+        InputIntentStatus.setAttribute('type', 'hidden');
+        InputIntentStatus.setAttribute('name', 'stripeIntentStatus');
+        InputIntentStatus.setAttribute('value', intent.status);
+
+        InputIntentSubscription.setAttribute('type', 'hidden');
+        InputIntentSubscription.setAttribute('name', 'subscription');
+        InputIntentSubscription.setAttribute('value', subscription);
+
+        //Mettre tous dans le form
+        form.appendChild(InputIntentId);
+        form.appendChild(InputIntentPaymentMethod);
+        form.appendChild(InputIntentStatus);
+        form.appendChild(InputIntentSubscription);
+        form.submit();
+    }
+</script>
+{% endblock %}

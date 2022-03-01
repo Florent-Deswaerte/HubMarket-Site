@@ -95,7 +95,7 @@ use Doctrine\Common\Collections\ArrayCollection;
         ],
     ],
     itemOperations: [
-        'patchUser'=> [
+        'patchProduit'=> [
             'method' => 'PATCH',
             'filters' => [],
             'openapi_context' => [

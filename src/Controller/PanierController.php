@@ -112,4 +112,21 @@ class PanierController extends AbstractController
 
         return $this->redirectToRoute('panier_paiement', ['id'=> $id]);
     }
+
+    //Page du récapitulatif des commandes
+    #[Route('/historique', name: 'historique')]
+    public function historique(ProduitsManager $produitsManager): Response
+    {
+        //Si pas connecté alors redirigé sur la page login
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
+        //$lcommande = $this->commandesRepository->findOneByCommande($this->getUser()->getId());
+
+        return $this->render('panier/historique.html.twig', [
+            'utilisateur' => $this->getUser(),
+            'commande' => $this->commandesRepository->findOneByStatusDifferentNull($this->getUser()->getId()),
+            'somme' => $this->commandesRepository->findSomme($this->getUser()->getId())
+        ]);
+    }
 }

@@ -19,22 +19,15 @@ class LCommandesRepository extends ServiceEntityRepository
         parent::__construct($registry, LCommandes::class);
     }
 
-    // /**
-    //  * @return LCommandes[] Returns an array of LCommandes objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findOneByCommande($id)
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('c')
+            ->Where('c.Commandes = :id')
+            ->setParameter(':id', $id)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?LCommandes

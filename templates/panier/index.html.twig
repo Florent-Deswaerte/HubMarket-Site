@@ -66,17 +66,19 @@
                                         <!--Quantité du produit-->
                                         <td class="quantity__item">
                                             <div class="quantity">
-                                                <div class="pro-qty-2">
-                                                    
-                                                    <input type="text" value="{{produit.qty}}">
-                                                </div>
+                                                <!--Image provenant de fontawesome | On stocke l'action - et l'id -->
+                                                <i class="fa fa-angle-left mx-2" data-action="-" data-id="{{produit.id}}"></i>
+                                                <!--Qualité | l'id sert à récupérer la quantité du même produit-->
+                                                <span class="qty_item" id="qte-{{produit.id}}">999</span>
+                                                <!--Image provenant de fontawesome-->
+                                                <i class="fa fa-angle-right mx-2"></i>
                                             </div>
                                         </td>
                                         <!--Fin Quantité du produit-->
 
-                                        <!--Total du produit-->
-                                        <td class="cart__price">
-                                            <h4 class="total-class">{{produit.prix}}<h4>
+                                        <!--Total du produit | l'id sert à récupérer la quantité du même produit-->
+                                        <td class="cart__price" id="total-{{produit.id}}">
+                                            {{produit.prix}}
                                         </td>
                                         <!--Fin Total du produit-->
 
@@ -124,4 +126,9 @@
         </section>
         <!-- Fin Section Panier -->
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}{{parent()}}
+    <!-- Js Plugins -->
+    <script src="{{ asset('js/panier.js') }}"></script>
 {% endblock %}

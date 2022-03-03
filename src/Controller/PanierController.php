@@ -87,8 +87,9 @@ class PanierController extends AbstractController
     #[Route('/subscription/{id}', name: 'subscription_paiement')]
     public function panierSubscription(int $id, Request $request, ProduitsManager $produitsManager): Response
     {
-        dd($request);
         $commande = $this->commandesRepository->findById($id);
+        //Récupérer le premier indice du tableau $commande pour avoir juste la commande que l'on veut
+        $order = $commande[0];
         //Si pas connecté alors redirigé sur la page login
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
@@ -97,11 +98,11 @@ class PanierController extends AbstractController
         $utilisateur = $this->getUser();
         if($request->getMethod()=== "POST"){
             //Retourner la ressource et faire le traitement
-            $ressource = $produitsManager->stripe($request->request->all(), $commande);
+            $ressource = $produitsManager->stripe($request->request->all(), $order);
             //Si ressource différent de null
             if(null!= $ressource){
                 //Créer la commande
-                $produitsManager->create_subscription($ressource, $commande, $utilisateur);
+                $produitsManager->create_subscription($ressource, $order, $utilisateur);
                 //Retourne une réponse
                 return $this->render('panier/reponse.html.twig', [
                     'commande'=>$commande
@@ -110,5 +111,22 @@ class PanierController extends AbstractController
         }
 
         return $this->redirectToRoute('panier_paiement', ['id'=> $id]);
+    }
+
+    //Page du récapitulatif des commandes
+    #[Route('/historique', name: 'historique')]
+    public function historique(ProduitsManager $produitsManager): Response
+    {
+        //Si pas connecté alors redirigé sur la page login
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
+        //$lcommande = $this->commandesRepository->findOneByCommande($this->getUser()->getId());
+
+        return $this->render('panier/historique.html.twig', [
+            'utilisateur' => $this->getUser(),
+            'commande' => $this->commandesRepository->findOneByStatusDifferentNull($this->getUser()->getId()),
+            'somme' => $this->commandesRepository->findSomme($this->getUser()->getId())
+        ]);
     }
 }

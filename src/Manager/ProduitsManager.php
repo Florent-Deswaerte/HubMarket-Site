@@ -3,7 +3,7 @@ namespace App\Manager;
 
 use App\Entity\Commandes;
 use App\Entity\Produits;
-use App\Entity\Utilisateur;
+use App\Entity\Utilisateurs;
 use App\Repository\CommandesRepository;
 use App\Services\StripeService;
 use DateTime;
@@ -12,10 +12,15 @@ use Doctrine\ORM\EntityManagerInterface;
 class ProduitsManager
 {
     /**
+     * @var EntityManagerInterface
+     */
+    protected $em;
+
+    /**
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(private EntityManagerInterface $entityManager, private StripeService $stripeService, private CommandesRepository $commandesRepository)
-    {}
+    public function __construct(EntityManagerInterface $entityManager, private StripeService $stripeService, private CommandesRepository $commandesRepository)
+    {$this->em = $entityManager;}
 
     //Récupère tous les produits
     public function getProduits()
@@ -59,14 +64,12 @@ class ProduitsManager
     }
 
     //Créer une commande
-    public function create_subscription(array $ressource, Commandes $commandes, Utilisateur $user)
+    public function create_subscription(array $ressource, Commandes $commandes, Utilisateurs $user)
     {
         //Récupération de l'id de l'utilisateur
         $user_id = $user->getId();
         //Je récupère la commande de l'utilisateur
         $order = $this->commandesRepository->findOneByStatus($user_id);
-
-        dd($order);
 
         //Insertion ressource brand de Stripe
         $order->setBrandStripe($ressource['stripeBrand']);

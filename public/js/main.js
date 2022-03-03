@@ -180,13 +180,10 @@
     //Function clique des boutons
     proQty.on('click', '.qtybtn', function() {
         var $button = $(this);
-        var $total = $('.total-class');
-        console.log($total);
         var oldValue = $button.parent().find('input').val();
 
         //Récupère la classe .pro-qty-prix (Le prix du produit)
         var proPrix = $('.pro-qty-prix')[0].innerText;
-        console.log(proPrix);
 
         //Récupère la classe .cart__price (Le total du produit)
         var proTotal = $('.cart__price')[0].innerText;
@@ -194,7 +191,7 @@
         if ($button.hasClass('inc')) {
             var newVal = parseFloat(oldValue) + 1;
             var proTotalCalcul = proPrix * newVal;
-            $total.parent().find('h4').val(proTotalCalcul);
+            $('.cart__price')[0].innerText = proTotalCalcul;
         } else {
             // Pas décrémenter en dessous de 0
             if (oldValue > 0) {
@@ -206,7 +203,6 @@
             }
         }
         $button.parent().find('input').val(newVal);
-        $total.parent().find('h4').val(proTotalCalcul);
     });
     /*------------------
         Fin Quantité Prix

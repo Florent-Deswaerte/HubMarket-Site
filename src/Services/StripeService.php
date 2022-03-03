@@ -52,7 +52,7 @@ class StripeService
             $payment_intent = \Stripe\PaymentIntent::retrieve($stripeParameter['stripeIntentId']);
         }
         //Si le paiement est validé
-        if($stripeParameter['stripeIntentId'] === 'succeeded'){
+        if($stripeParameter['stripeIntentStatus'] === 'succeeded'){
             //TODO
         }else{
             //Annuler le paiement
@@ -69,6 +69,16 @@ class StripeService
      * @return \Stripe\PaymentIntent|null
      */
     public function stripe(array $stripeParameter, Commandes $commandes){
+    /**    
+     * Vérifier ce qu'il y a dans la fonction paiement
+     * 
+     *dd($this->paiement(
+     *         $commandes->getTotalCommande() * 100,
+     *         'eur',
+     *         $commandes->getId(),
+     *        $stripeParameter
+     *    ));
+     */
         return $this->paiement(
             $commandes->getTotalCommande() * 100,
             'eur',

@@ -168,6 +168,9 @@
     "ralouphie/getallheaders": {
         "version": "3.0.3"
     },
+    "stripe/stripe-php": {
+        "version": "v7.114.0"
+    },
     "symfony/apache-pack": {
         "version": "1.0",
         "recipe": {

@@ -67,11 +67,11 @@
                                         <td class="quantity__item">
                                             <div class="quantity">
                                                 <!--Image provenant de fontawesome | On stocke l'action - et l'id -->
-                                                <i class="fa fa-angle-left mx-2" data-action="-" data-id="{{produit.id}}"></i>
+                                                <i class="fa fa-angle-left mx-2" data-action="moins" data-id="{{produit.id}}"></i>
                                                 <!--Qualité | l'id sert à récupérer la quantité du même produit-->
                                                 <span class="qty_item" id="qte-{{produit.id}}">999</span>
                                                 <!--Image provenant de fontawesome-->
-                                                <i class="fa fa-angle-right mx-2"></i>
+                                                <i class="fa fa-angle-right mx-2" data-action="plus" data-id="{{produit.id}}"></i>
                                             </div>
                                         </td>
                                         <!--Fin Quantité du produit-->

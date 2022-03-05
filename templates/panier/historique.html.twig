@@ -34,13 +34,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {% for commandes in commande %}
+
+                                {# Liste des commandes de l'utilisateurs #}
+                                {% for commande in commandes %}
                                     <tr>
-                                        <td>{{ commandes.id }}</td>
-                                        <td>{{ commandes.DateCommande }}</td>
-                                        <td>{{ commandes.TotalCommande|number_format(2, ',', '.') }} €</td>
-                                        <td>{{ commandes.brand_stripe }}</td>
-                                        <td><span class="badge badge-success">{{ commandes.status_stripe }}</span></td>
+                                        <td>{{ commande.id }}</td>
+                                        <td>{{ commande.DateCommande|date("d/m/Y") }}</td>
+                                        <td>{{ commande.TotalCommande|number_format(2, ',', '.') }} €</td>
+                                        <td>{{ commande.brandStripe }}</td>
+                                        <td><span class="badge badge-success">{{ commande.statusStripe }}</span></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

@@ -121,11 +121,12 @@ class PanierController extends AbstractController
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
-        //$lcommande = $this->commandesRepository->findOneByCommande($this->getUser()->getId());
 
         return $this->render('panier/historique.html.twig', [
             'utilisateur' => $this->getUser(),
-            'commande' => $this->commandesRepository->findOneByStatusDifferentNull($this->getUser()->getId()),
+            //Trouve les commandes différentes de null en status
+            'commandes' => $this->commandesRepository->findOneByStatusDifferentNull($this->getUser()->getId()),
+            //Calcul la somme de toutes les commandes
             'somme' => $this->commandesRepository->findSomme($this->getUser()->getId())
         ]);
     }

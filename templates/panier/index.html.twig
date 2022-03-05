@@ -56,10 +56,11 @@
                                                 <div class="product__cart__item__text">
                                                     <!--Nom du produit-->
                                                     <h6>{{produit.nom}}</h6>
+                                                    <p type="hidden" class="idProduit">{{produit.id}}</p>
                                                     <!--Fin Nom du produit-->  
 
                                                     <!--Prix du produit-->
-                                                    <h5 class="pro-qty-prix">{{produit.prix}}</h5>
+                                                    <h5 class="pro-qty-prix" id="prix-{{produit.id}}" data-prix="{{produit.prix}}">{{produit.prix|number_format(2, ',', '.') }} €</h5>
                                                     <!--Fin Prix du produit-->
                                                 </div>
                                             </td>
@@ -69,7 +70,7 @@
                                                 <!--Image provenant de fontawesome | On stocke l'action - et l'id -->
                                                 <i class="fa fa-angle-left mx-2" data-action="moins" data-id="{{produit.id}}"></i>
                                                 <!--Qualité | l'id sert à récupérer la quantité du même produit-->
-                                                <span class="qty_item" id="qte-{{produit.id}}">999</span>
+                                                <span class="qty_item" data-id="{{produit.id}}" data-quantite="1">1</span>
                                                 <!--Image provenant de fontawesome-->
                                                 <i class="fa fa-angle-right mx-2" data-action="plus" data-id="{{produit.id}}"></i>
                                             </div>
@@ -77,9 +78,7 @@
                                         <!--Fin Quantité du produit-->
 
                                         <!--Total du produit | l'id sert à récupérer la quantité du même produit-->
-                                        <td class="cart__price" id="total-{{produit.id}}">
-                                            {{produit.prix}}
-                                        </td>
+                                        <td class="cart__price totalPrice" id="total-{{produit.id}}">{{produit.prix }} €</td>
                                         <!--Fin Total du produit-->
 
                                         <!--Supprimer du produit-->
@@ -115,7 +114,8 @@
                         <div class="cart__total">
                             <h6>Total Panier</h6>
                             <ul>
-                                <li>Total <span>$ 169.50</span></li>
+                                <li>Total <span id="totalGolbal">0</span></li>
+                                <input type="hidden"></input>
                             </ul>
                             <a href="#" class="primary-btn">Paiement</a>
                         </div>

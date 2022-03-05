@@ -148,6 +148,9 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(inversedBy: 'utilisateurs', targetEntity: Panier::class, cascade: ['persist', 'remove'])]
     private $panier;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $adresse;
+
     public function __construct()
     {
         $this->commande = new ArrayCollection();
@@ -320,5 +323,17 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
             'commande'=>$this->commande
         );
         return $data;
+    }
+
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    public function setAdresse(string $adresse): self
+    {
+        $this->adresse = $adresse;
+
+        return $this;
     }
 }

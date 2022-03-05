@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Commandes;
+use App\Entity\Utilisateurs;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -43,6 +44,34 @@ class CommandesRepository extends ServiceEntityRepository
             ->setParameter(':id', $id)
             ->getQuery()
             ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+    * @return Commandes
+    */
+    public function findOneByStatusDifferentNull($id)
+    {
+        return $this->createQueryBuilder('c')
+            ->Where('c.status_stripe is not null')
+            ->andWhere('c.utilisateurs = :id')
+            ->setParameter(':id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+    * @return Commandes
+    */
+    public function findSomme($id)
+    {
+        return $this->createQueryBuilder('c')
+            ->select('sum(c.TotalCommande)')
+            ->andWhere('c.utilisateurs = :id')
+            ->setParameter(':id', $id)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
     }
 

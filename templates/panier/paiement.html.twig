@@ -45,6 +45,7 @@
     }
 
     //Relier la form à l'ojet stripe
+    //Je créer une carte stripe
     var card = elements.create('card', {style: styleCostum});
     card.mount("#card-elements");
 
@@ -77,9 +78,9 @@
             if(result.error){
 
             } else if ('paymentIntent' in result){
-                console.log('Result : ', result);
+                //console.log('Result : ', result);
                 stripeTokenHandler(result.paymentIntent);
-                console.log('Result intentpayement : ', result.paymentIntent);
+                //console.log('Result intentpayement : ', result.paymentIntent);
             }
         }) //Retour réponse paiement
     });

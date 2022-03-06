@@ -100,26 +100,52 @@
                         <!--Fin Bouton continuer les achats-->
                     </div>
                     <div class="col-lg-4">
+                    
                         <!--Code promo-->
-                        <div class="cart__discount">
+                        {# <div class="cart__discount">
                             <h6>Code Promo</h6>
                             <form action="#">
                                 <input type="text" placeholder="Entrez le code">
                                 <button type="submit">Appliquer</button>
                             </form>
-                        </div>
+                        </div> #}
                         <!--Fin Code promo-->
 
+
+
+
+
+
                         <!--Total du panier-->
-                        <div class="cart__total">
+                        {# <div class="cart__total">
                             <h6>Total Panier</h6>
                             <ul>
                                 <li>Total <span id="totalGolbal">0</span></li>
                                 <input type="hidden"></input>
                             </ul>
-                            <a href="#" class="primary-btn">Paiement</a>
+                            <a href="{{ path('panier_paiement_commande', {'total': 1500})}}" class="primary-btn">Paiement</a>
+                        </div> #}
+
+
+
+                        <div class="cart__total">
+                            <form action="{{path("panier_paiement_commande")}}" method="post" id="createCommande-form">
+                                <h6>Total Panier</h6>
+                                <ul>
+                                    <li>Total <span id="totalGolbal">0</span></li>
+                                    <input type="hidden" id="totalGolbal" name="valueTotal"></input>
+                                </ul>
+                                <button class="site-btn" style="width: 100%;" type="submit" name="btnCommande">Paiement</button>
+                            </form>
                         </div>
                         <!--Fin Total du panier-->
+
+
+
+
+
+
+
                     </div>
                 </div>
             </div>

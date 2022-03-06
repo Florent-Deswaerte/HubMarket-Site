@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\HelperControllers\HelperController;
 use App\Controller\ApiControllers\Produits\ProduitsApiController;
+use App\Entity\LCommandes;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/panier', name: 'panier_')]
@@ -129,5 +130,110 @@ class PanierController extends AbstractController
             //Calcul la somme de toutes les commandes
             'somme' => $this->commandesRepository->findSomme($this->getUser()->getId())
         ]);
+    }
+
+    #[Route('/paiement_commande', name: 'paiement_commande')]
+    public function panierPaiementCommande(Request $request): Response
+    {
+        
+        //Si pas connecté alors redirigé sur la page login
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
+        $utilisateur = $this->getUser();
+        $utilisateurID = $utilisateur->getId();
+        $commandeStatus = $this->commandesRepository->findOneByStatus($utilisateurID);
+        if(isset($_POST['btnCommande'])){
+            $total = $_POST['valueTotal'];
+            if ($commandeStatus){
+                //Je modifie la commande existante avec de nouvelles données
+                $date = new \DateTime();
+                $dateArrivee = new \DateTime();
+                //J'ajoute 1 mois à la date d'arrivée
+                $dateArrivee->modify('+1 month');
+                $commandeStatus->setUtilisateurs($utilisateur);
+                $commandeStatus->setDateCommande($date);
+                $commandeStatus->setDateArrivee($dateArrivee);
+                // =======================================================================> ERROR
+                $commandeStatus->setTotalCommande(1515);
+                $commandeStatus->setStripeToken(null);
+                $commandeStatus->setBrandStripe(null);
+                $commandeStatus->setLast4Stripe(null);
+                $commandeStatus->setIdChargeStripe(null);
+
+                //Je sauvegarde la commande
+                $this->helper->saveEntityObject($commandeStatus);
+                //Je set l'utilisateur à la commande
+                $utilisateur->addCommande($commandeStatus);
+                //Je sauvegarde l'utilisateur
+                $this->helper->saveEntityObject($utilisateur);
+
+                //Je créer des lignes commandes contenant les produits de la commande
+                $produits = $this->getUser()->getPanier()->getProduits();
+                foreach ($produits as $produit){
+                    $prix = $produit->getPrix();
+                    $ligneCommande = new LCommandes();
+                    // =======================================================================> ERROR
+                    $ligneCommande->setQty(15);
+                    $ligneCommande->setPrix($prix);
+                    $ligneCommande->setCommandes($commandeStatus);
+                    $ligneCommande->setProduits($produit);
+                    //Je sauvegarde la ligne commande
+                    $this->helper->saveEntityObject($ligneCommande);
+                }
+                return $this->redirectToRoute('panier_details', [
+                    'id' => $commandeStatus->getId(),
+                ]);
+            } else {
+                //Je créer une commande avec de nouvelles données
+                $date = new \DateTime();
+                $dateArrivee = new \DateTime();
+                //J'ajoute 1 mois à la date d'arrivée
+                $dateArrivee->modify('+1 month');
+                $commande = new Commandes();
+                $commande->setUtilisateurs($utilisateur);
+                $commande->setDateCommande($date);
+                $commande->setDateArrivee($dateArrivee);
+                // =======================================================================> ERROR
+                $commande->setTotalCommande(1515);
+
+                //Je sauvegarde la commande
+                $this->helper->saveEntityObject($commande);
+                //Je set l'utilisateur à la commande
+                $utilisateur->addCommande($commande);
+                //Je sauvegarde l'utilisateur
+                $this->helper->saveEntityObject($utilisateur);
+
+                //Je créer des lignes commandes contenant les produits de la commande
+                $produits = $this->getUser()->getPanier()->getProduits();
+                foreach ($produits as $produit){
+                    $prix = $produit->getPrix();
+                    $ligneCommande = new LCommandes();
+                    // =======================================================================> ERROR
+                    $ligneCommande->setQty(15);
+                    $ligneCommande->setPrix($prix);
+                    $ligneCommande->setCommandes($commande);
+                    $ligneCommande->setProduits($produit);
+                    //Je sauvegarde la ligne commande
+                    $this->helper->saveEntityObject($ligneCommande);
+                }
+                return $this->redirectToRoute('panier_details', [
+                    'id' => $commande->getId(),
+                ]);
+            }
+        };
+
+        // //Créer la commande en BDD
+        // $commande = new Commandes();
+        // $commande->setTotalCommande(100)
+        //          ->setUtilisateurs($this->getUser());
+        
+        // $this->entityManager->persist($commande);
+        // $this->entityManager->flush();
+
+        // //Rediriger sur la page détail de la commande
+        // return $this->redirectToRoute('paiement_index', [
+        //     'id' => $commande->getId(),
+        // ]);
     }
 }

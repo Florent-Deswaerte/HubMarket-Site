@@ -25,19 +25,7 @@ class LCommandesRepository extends ServiceEntityRepository
             ->Where('c.Commandes = :id')
             ->setParameter(':id', $id)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
-
-    /*
-    public function findOneBySomeField($value): ?LCommandes
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

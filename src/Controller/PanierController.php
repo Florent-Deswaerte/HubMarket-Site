@@ -9,6 +9,7 @@ use App\Entity\Commandes;
 use App\Manager\ProduitsManager;
 use App\Repository\PanierRepository;
 use App\Repository\CommandesRepository;
+use App\Repository\LCommandesRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,7 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/panier', name: 'panier_')]
 class PanierController extends AbstractController
 {
-    public function __construct(private ProduitsApiController $produitsApiController, private PanierRepository $panierRepository, private HelperController $helper, private CommandesRepository $commandesRepository)
+    public function __construct(private ProduitsApiController $produitsApiController, private PanierRepository $panierRepository, private HelperController $helper, private CommandesRepository $commandesRepository, private LCommandesRepository $lCommandesRepository)
     {}
 
     //Page du récapitulatif du panier de l'utilisateur
@@ -47,17 +48,15 @@ class PanierController extends AbstractController
     {
         //Cherche la commande avec cette id
         $commande = $this->commandesRepository->findOneById($id);
+        $lcommande = $this->lCommandesRepository->findOneByCommande($commande->getId());
         //Si pas connecté alors redirigé sur la page login
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
-
-        $utilisateur1 = $this->getUser();
-        $utilisateur = $utilisateur1->getData();
-        //dd($utilisateur);
         return $this->render('panier/details.html.twig', [
-            'utilisateur' => $utilisateur,
-            'commande' => $commande
+            'utilisateur' => $this->getUser(),
+            'commande' => $commande,
+            'lcommande' => $lcommande
         ]);
     }
 
@@ -135,7 +134,6 @@ class PanierController extends AbstractController
     #[Route('/paiement_commande', name: 'paiement_commande')]
     public function panierPaiementCommande(Request $request): Response
     {
-        
         //Si pas connecté alors redirigé sur la page login
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
@@ -222,18 +220,21 @@ class PanierController extends AbstractController
                 ]);
             }
         };
+    }
 
-        // //Créer la commande en BDD
-        // $commande = new Commandes();
-        // $commande->setTotalCommande(100)
-        //          ->setUtilisateurs($this->getUser());
-        
-        // $this->entityManager->persist($commande);
-        // $this->entityManager->flush();
-
-        // //Rediriger sur la page détail de la commande
-        // return $this->redirectToRoute('paiement_index', [
-        //     'id' => $commande->getId(),
-        // ]);
+    #[Route('/paiement_validation_commande', name: 'paiement_validation')]
+    public function panierPaiementValidationCommande(Request $request): Response
+    {
+        //Si pas connecté alors redirigé sur la page login
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
+        $utilisateur = $this->getUser();
+        $commandeStatus = $this->commandesRepository->findOneByStatus($utilisateurID);
+        if(isset($_POST['btnValidationCommande'])){
+            return $this->redirectToRoute('panier_paiement', [
+                'id' => $commande->getId(),
+            ]);
+        };
     }
 }

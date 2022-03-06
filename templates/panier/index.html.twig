@@ -129,12 +129,13 @@
 
 
                         <div class="cart__total">
-                            <form action="{{path("panier_paiement_commande")}}" method="post" id="createCommande-form">
                                 <h6>Total Panier</h6>
                                 <ul>
                                     <li>Total <span id="totalGolbal">0</span></li>
-                                    <input type="hidden" id="totalGolbal" name="valueTotal"></input>
                                 </ul>
+                            <form action="{{path("panier_paiement_commande")}}" method="post" id="createCommande-form">
+                                <input type="hidden" id="dataCommande" name="dataCommande"></input>
+                                <input type="hidden" id="totalGolbalInput" name="valueTotal"></input>
                                 <button class="site-btn" style="width: 100%;" type="submit" name="btnCommande">Paiement</button>
                             </form>
                         </div>

@@ -39,7 +39,7 @@ class CommandesRepository extends ServiceEntityRepository
     public function findOneByStatus($id)
     {
         return $this->createQueryBuilder('c')
-            ->Where('c.statusStripe is null')
+            ->where('c.statusStripe is null')
             ->andWhere('c.utilisateurs = :id')
             ->setParameter(':id', $id)
             ->getQuery()

@@ -2598,23 +2598,23 @@ ol {
 }
 
 .checkout__input input::-webkit-input-placeholder {
-    color: #b7b7b7;
+    color: #2f2f2f;
 }
 
 .checkout__input input::-moz-placeholder {
-    color: #b7b7b7;
+    color: #2f2f2f;
 }
 
 .checkout__input input:-ms-input-placeholder {
-    color: #b7b7b7;
+    color: #2f2f2f;
 }
 
 .checkout__input input::-ms-input-placeholder {
-    color: #b7b7b7;
+    color: #2f2f2f;
 }
 
 .checkout__input input::placeholder {
-    color: #b7b7b7;
+    color: #2f2f2f;
 }
 
 .checkout__input__checkbox label {

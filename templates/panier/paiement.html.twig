@@ -3,7 +3,7 @@
 {% block title %}{{parent()}}Panier{% endblock %}
 
 {% block body %}
-<div class="example-wrapper">
+<div class="container">
     Paiement
 
     <form action="{{path("panier_subscription_paiement", {'id': commande.id}) }}" method="post" id="payment-form">
@@ -37,16 +37,48 @@
     console.log('client secret', clientSecret);
 
     //Style en json
-    var styleCostum = {
-        base: {
-            fontSize: '16px',
-            color: '#25332d'
-        }
-    }
+    const styleCostum = {
+    base: {
+      iconColor: '#c4f0ff',
+      color: 'black',
+      fontWeight: '500',
+      fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+      fontSize: '16px',
+      fontSmoothing: 'antialiased',
+      ':-webkit-autofill': {
+        color: '#fce883',
+      },
+      '::placeholder': {
+        color: '#87BBFD',
+      },
+    },
+    invalid: {
+      iconColor: '#aa1e1e',
+      color: '#aa1e1e',
+    },
+    cardNumber: {
+      backgroundColor: '#aa1e1e',
+    },
+    };
 
     //Relier la form à l'ojet stripe
     //Je créer une carte stripe
-    var card = elements.create('card', {style: styleCostum});
+    var card = elements.create('card', {
+        style: {
+            base: {
+            iconColor: '#666EE8',
+            color: '#31325F',
+            lineHeight: '40px',
+            fontWeight: 300,
+            fontFamily: 'Helvetica Neue',
+            fontSize: '15px',
+
+            '::placeholder': {
+                color: '#CFD7E0',
+            },
+            },
+        }
+    });
     card.mount("#card-elements");
 
     //Message erreur

@@ -14,6 +14,8 @@
 const buttonsQuantity = document.querySelectorAll('.quantity i');
 const textQuantity = document.querySelectorAll('.quantity .qty_item');
 const totalGlobal = document.querySelector('#totalGolbal');
+const totalGlobalInput = document.querySelector('#totalGolbalInput');
+const dataCommande = document.querySelector('#dataCommande');
 
 //Implémente les données de quantité
 textQuantity.forEach(texte => {
@@ -67,6 +69,14 @@ buttonsQuantity.forEach(button => {
 
 function comptage() {
     let texteTotal = document.querySelectorAll('.totalPrice');
+    let datas = {};
+
+    textQuantity.forEach(texte => {
+        datas[texte.dataset.id] = parseFloat(texte.textContent);
+    });
+
+    dataCommande.value = JSON.stringify(datas);
+
     let prixGlobal = 0;
     //Boucle sur le texteTotal et ajoute les éléments (les prix)
     texteTotal.forEach(prix => {
@@ -74,6 +84,7 @@ function comptage() {
     });
     //Affiche le total du prix
     totalGlobal.textContent = parseFloat(prixGlobal).toFixed(2) + " €";
+    totalGlobalInput.value = parseFloat(prixGlobal).toFixed(2);
 };
 
 

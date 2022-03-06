@@ -86,7 +86,7 @@
                         <div class="header__nav__option">
                             <a href="#" class="search-switch"><img src="{{ asset('img/icon/search.png') }}" alt=""></a>
                             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                                <a href="{{path('panier_historique')}}"><img src="{{ asset('img/icon/compare.png') }}" alt=""></a>
+                                <a href="{{path('panier_historique_commande')}}"><img src="{{ asset('img/icon/compare.png') }}" alt=""></a>
                                 <a href="{{path('panier_index')}}"><img src="{{ asset('img/icon/cart.png') }}" alt=""></a>
                             {% endif %}
                         </div>

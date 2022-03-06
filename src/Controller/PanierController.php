@@ -2,9 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Panier;
-use App\Entity\Produits;
+use App\Entity\Utilisateurs;
 use App\Entity\Commandes;
 use App\Manager\ProduitsManager;
 use App\Repository\PanierRepository;
@@ -16,23 +15,26 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\HelperControllers\HelperController;
 use App\Controller\ApiControllers\Produits\ProduitsApiController;
 use App\Entity\LCommandes;
+use App\Form\InformationPaiementType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/panier', name: 'panier_')]
 class PanierController extends AbstractController
 {
-    public function __construct(private ProduitsApiController $produitsApiController, private PanierRepository $panierRepository, private HelperController $helper, private CommandesRepository $commandesRepository, private LCommandesRepository $lCommandesRepository)
+    public function __construct(
+        private ProduitsApiController $produitsApiController,
+        private PanierRepository $panierRepository,
+        private HelperController $helper,
+        private CommandesRepository $commandesRepository,
+        private LCommandesRepository $lCommandesRepository,
+        private EntityManagerInterface $entityManager)
     {}
 
     //Page du récapitulatif du panier de l'utilisateur
     #[Route('/', name: 'index')]
     public function index(): Response
     {
-        //Si pas connecté alors redirigé sur la page login
-        if(!$this->getUser()){
-            return $this->redirectToRoute('app_login');
-        }
-
         $panier = $this->getUser()->getPanier();
         //dd($panier);
         $panierProduits = $panier->getProduits();
@@ -42,19 +44,29 @@ class PanierController extends AbstractController
             'produits' => $panierProduits,
         ]);
     }
+
     //Page contenant les informations personnelles de l'utilisateur
     #[Route('/details/{id}', name: 'details')]
-    public function panierDetails(int $id): Response
+    public function panierDetails(int $id, Request $request): Response
     {
         //Cherche la commande avec cette id
         $commande = $this->commandesRepository->findOneById($id);
         $lcommande = $this->lCommandesRepository->findOneByCommande($commande->getId());
-        //Si pas connecté alors redirigé sur la page login
-        if(!$this->getUser()){
-            return $this->redirectToRoute('app_login');
+
+        //Initialise le Formulaire avec les données de l'utilisateurs
+        $form = $this->createForm(InformationPaiementType::class, $this->getUser());
+        //Récupère les données du Formulaire et rempli l'utilisateur
+        $form->handleRequest($request);
+        if($form->isSubmitted()&&$form->isValid()){
+            $this->entityManager->flush();
+            return $this->redirectToRoute('panier_paiement', [
+                'id' => $commande->getId(),
+            ]);
         }
+        
         return $this->render('panier/details.html.twig', [
             'utilisateur' => $this->getUser(),
+            'form' => $form->createView(),
             'commande' => $commande,
             'lcommande' => $lcommande
         ]);
@@ -66,10 +78,7 @@ class PanierController extends AbstractController
     {
         //Cherche la commande avec cette id
         $commande = $this->commandesRepository->findOneById($id);
-        //Si pas connecté alors redirigé sur la page login
-        if(!$this->getUser()){
-            return $this->redirectToRoute('app_login');
-        }
+
         //Récupération information utilisateur
         $utilisateur = $this->getUser()->getData();
         
@@ -90,11 +99,12 @@ class PanierController extends AbstractController
         $commande = $this->commandesRepository->findById($id);
         //Récupérer le premier indice du tableau $commande pour avoir juste la commande que l'on veut
         $order = $commande[0];
-        //Si pas connecté alors redirigé sur la page login
-        if(!$this->getUser()){
-            return $this->redirectToRoute('app_login');
-        }
+
         //Récupération information utilisateur
+        
+        /** @var Utilisateurs $utilisateur 
+         * Pour pouvoir cliquer sur setPanier() (pour dire quel object c'est)
+        */
         $utilisateur = $this->getUser();
         if($request->getMethod()=== "POST"){
             //Retourner la ressource et faire le traitement
@@ -104,7 +114,11 @@ class PanierController extends AbstractController
                 //Créer la commande
                 $produitsManager->create_subscription($ressource, $order, $utilisateur);
                 //Retourne une réponse
-                return $this->redirectToRoute('panier_historique', [
+                $panier = $utilisateur->getPanier();
+                $utilisateur->setPanier(null);
+                $this->entityManager->flush();
+                $this->helper->removeEntityObject($panier);
+                return $this->redirectToRoute('panier_historique_commande', [
                     'commande' => $commande,
                 ]);
             }
@@ -114,14 +128,9 @@ class PanierController extends AbstractController
     }
 
     //Page du récapitulatif des commandes
-    #[Route('/historique', name: 'historique')]
+    #[Route('/historique', name: 'historique_commande')]
     public function historique(ProduitsManager $produitsManager): Response
     {
-        //Si pas connecté alors redirigé sur la page login
-        if(!$this->getUser()){
-            return $this->redirectToRoute('app_login');
-        }
-
         return $this->render('panier/historique.html.twig', [
             'utilisateur' => $this->getUser(),
             //Trouve les commandes différentes de null en status
@@ -134,15 +143,14 @@ class PanierController extends AbstractController
     #[Route('/paiement_commande', name: 'paiement_commande')]
     public function panierPaiementCommande(Request $request): Response
     {
-        //Si pas connecté alors redirigé sur la page login
-        if(!$this->getUser()){
-            return $this->redirectToRoute('app_login');
-        }
+        // id produit & quantité
+        $dataCommande = \json_decode($request->request->get('dataCommande'), true);
+        $prixTotal = $request->request->get('valueTotal');
+
         $utilisateur = $this->getUser();
         $utilisateurID = $utilisateur->getId();
         $commandeStatus = $this->commandesRepository->findOneByStatus($utilisateurID);
         if(isset($_POST['btnCommande'])){
-            $total = $_POST['valueTotal'];
             if ($commandeStatus){
                 //Je modifie la commande existante avec de nouvelles données
                 $date = new \DateTime();
@@ -152,12 +160,7 @@ class PanierController extends AbstractController
                 $commandeStatus->setUtilisateurs($utilisateur);
                 $commandeStatus->setDateCommande($date);
                 $commandeStatus->setDateArrivee($dateArrivee);
-                // =======================================================================> ERROR
-                $commandeStatus->setTotalCommande(1515);
-                $commandeStatus->setStripeToken(null);
-                $commandeStatus->setBrandStripe(null);
-                $commandeStatus->setLast4Stripe(null);
-                $commandeStatus->setIdChargeStripe(null);
+                $commandeStatus->setTotalCommande($prixTotal);
 
                 //Je sauvegarde la commande
                 $this->helper->saveEntityObject($commandeStatus);
@@ -170,14 +173,17 @@ class PanierController extends AbstractController
                 $produits = $this->getUser()->getPanier()->getProduits();
                 foreach ($produits as $produit){
                     $prix = $produit->getPrix();
-                    $ligneCommande = new LCommandes();
-                    // =======================================================================> ERROR
-                    $ligneCommande->setQty(15);
-                    $ligneCommande->setPrix($prix);
-                    $ligneCommande->setCommandes($commandeStatus);
-                    $ligneCommande->setProduits($produit);
+                    $ligneCommandes = $commandeStatus->getCommandes();
+
+                    foreach ($ligneCommandes as $ligneCommande) {
+                        $ligneCommande->setQty($this->findQuantity($dataCommande, $produit->getId()));
+                        $ligneCommande->setPrix($prix);
+                        $ligneCommande->setCommandes($commandeStatus);
+                        $ligneCommande->setProduits($produit);
+                    }
+
                     //Je sauvegarde la ligne commande
-                    $this->helper->saveEntityObject($ligneCommande);
+                    $this->entityManager->flush();
                 }
                 return $this->redirectToRoute('panier_details', [
                     'id' => $commandeStatus->getId(),
@@ -192,8 +198,7 @@ class PanierController extends AbstractController
                 $commande->setUtilisateurs($utilisateur);
                 $commande->setDateCommande($date);
                 $commande->setDateArrivee($dateArrivee);
-                // =======================================================================> ERROR
-                $commande->setTotalCommande(1515);
+                $commande->setTotalCommande($prixTotal);
 
                 //Je sauvegarde la commande
                 $this->helper->saveEntityObject($commande);
@@ -207,8 +212,7 @@ class PanierController extends AbstractController
                 foreach ($produits as $produit){
                     $prix = $produit->getPrix();
                     $ligneCommande = new LCommandes();
-                    // =======================================================================> ERROR
-                    $ligneCommande->setQty(15);
+                    $ligneCommande->setQty($this->findQuantity($dataCommande, $produit->getId()));
                     $ligneCommande->setPrix($prix);
                     $ligneCommande->setCommandes($commande);
                     $ligneCommande->setProduits($produit);
@@ -222,19 +226,10 @@ class PanierController extends AbstractController
         };
     }
 
-    #[Route('/paiement_validation_commande', name: 'paiement_validation')]
-    public function panierPaiementValidationCommande(Request $request): Response
+    public function findQuantity(array $allQuantity, int $idProduit): int
     {
-        //Si pas connecté alors redirigé sur la page login
-        if(!$this->getUser()){
-            return $this->redirectToRoute('app_login');
-        }
-        $utilisateur = $this->getUser();
-        $commandeStatus = $this->commandesRepository->findOneByStatus($utilisateurID);
-        if(isset($_POST['btnValidationCommande'])){
-            return $this->redirectToRoute('panier_paiement', [
-                'id' => $commande->getId(),
-            ]);
-        };
+       foreach ($allQuantity as $key => $value) {
+           if ($key === $idProduit) { return $value; }
+       }
     }
 }

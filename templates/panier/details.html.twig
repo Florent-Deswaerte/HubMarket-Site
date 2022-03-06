@@ -7,26 +7,47 @@
             <section class="checkout spad">
                 <div class="container">
                     <div class="checkout__form">
-                        <form action="{{path("panier_paiement_validation")}}" method="post" id="validationCommande-form">
                             <div class="row">
                                 <div class="col-lg-8 col-md-6">
                                     <h6 class="checkout__title">Informations Personnelles </h6>
-                                    {% for u in utilisateur %}
+                                    {{ form_start(form) }}
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="checkout__input">
+                                                    {{ form_row(form.prenom) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkout__input">
+                                                    {{ form_row(form.nom) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="checkout__input">
+                                            {{ form_row(form.pays) }}
+                                        </div>
+                                        <div class="checkout__input">
+                                            {{ form_row(form.ville) }}
+                                        </div>
+                                        <div class="checkout__input">
+                                            {{ form_row(form.adresse) }}
+                                    </div>
+                                    <div class="checkout__input">
+                                        {{ form_row(form.codePostal) }}
+                                    </div>
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <div class="checkout__input">
-                                                <p>Prénom<span>*</span></p>
-                                                <input type="text">
+                                                {{ form_row(form.phone) }}
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="checkout__input">
-                                                <p>Nom<span>*</span></p>
-                                                <input type="text">
+                                                {{ form_row(form.email) }}
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="checkout__input">
+                                    {# <div class="checkout__input">
                                         <p>Pays<span>*</span></p>
                                         <input type="text">
                                     </div>
@@ -56,7 +77,7 @@
                                                 <input type="text">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> #}
                                     {# Note pour le livreur
                                     <div class="checkout__input__checkbox">
                                         <label for="diff-acc">
@@ -70,7 +91,6 @@
                                         <input type="text"
                                         placeholder="Note complémentaires pour le livreur.">
                                     </div>#}
-                                    {% endfor %}
                                 </div>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="checkout__order">
@@ -78,29 +98,19 @@
                                         <div class="checkout__order__products">Produits <span>Total</span></div>
                                         <ul class="checkout__total__products">
                                             {% for lc in lcommande %}
-                                                <li>01. Vanilla salted caramel <span>$ 300.0</span></li>
-                                                <li>02. German chocolate <span>$ 170.0</span></li>
-                                                <li>03. Sweet autumn <span>$ 170.0</span></li>
-                                                <li>04. Cluten free mini dozen <span>$ 110.0</span></li>
+                                                <li>{{lc.Produits.Nom}} <span>{{lc.Prix|number_format(2, ',', '.') }} €</span></li>
                                             {% endfor %}
                                         </ul>
                                         <ul class="checkout__total__all">
-                                            {% for c in commande %}
-                                            <li>Total <span>150 €</span></li>
-                                            {% endfor %}
+                                            <li>Total <span>{{commande.TotalCommande|number_format(2, ',', '.') }} €</span></li>
                                         </ul>
                                         <button type="submit" class="site-btn" name="btnValidationCommande">Procéder au Paiement</button>
                                     </div>
+                                    {{ form_end(form) }}
                                 </div>
                             </div>
-                        </form>
                     </div>
                 </div>
             </section>
             <!-- Checkout Section End -->
-        <!--Info commande-->
-        <!--Total prix-->
-        <!--Total prix-->
-    <a href="{{path('panier_paiement', { 'id': commande.id })}}">Acheter</a>
-    <button id="Paiement" onclick="/paiement">Acheter</button>
 {% endblock %}

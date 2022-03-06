@@ -68,6 +68,7 @@ class CommandesRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->select('sum(c.TotalCommande)')
+            ->Where('c.statusStripe is not null')
             ->andWhere('c.utilisateurs = :id')
             ->setParameter(':id', $id)
             ->getQuery()

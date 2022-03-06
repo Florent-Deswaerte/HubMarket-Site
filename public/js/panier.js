@@ -67,7 +67,6 @@ buttonsQuantity.forEach(button => {
 
 function comptage() {
     let texteTotal = document.querySelectorAll('.totalPrice');
-    let totalGlobal2 = document.querySelector('#valueTotal');
     let prixGlobal = 0;
     //Boucle sur le texteTotal et ajoute les éléments (les prix)
     texteTotal.forEach(prix => {
@@ -75,7 +74,6 @@ function comptage() {
     });
     //Affiche le total du prix
     totalGlobal.textContent = parseFloat(prixGlobal).toFixed(2) + " €";
-    totalGlobal2.textContent = parseFloat(prixGlobal).toFixed(2);
 };
 
 

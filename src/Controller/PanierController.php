@@ -104,8 +104,8 @@ class PanierController extends AbstractController
                 //Créer la commande
                 $produitsManager->create_subscription($ressource, $order, $utilisateur);
                 //Retourne une réponse
-                return $this->render('panier/reponse.html.twig', [
-                    'commande'=>$commande
+                return $this->redirectToRoute('panier_historique', [
+                    'commande' => $commande,
                 ]);
             }
         }

@@ -7,8 +7,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class ProduitsFormType extends AbstractType
 {
@@ -17,6 +18,7 @@ class ProduitsFormType extends AbstractType
         $builder
             ->add('nom', TextType::class, ['required' => true])
             ->add('qty', IntegerType::class, ['required' => true, 'attr'=> ['min'=>0]])
+            ->add('prix', MoneyType::class, ['required'=>true])
             ->add('fournisseur', TextType::class, ['required' => true])
             ->add('categorie', TextType::class, ['required' => true])
             ->add('Submit', SubmitType::class)

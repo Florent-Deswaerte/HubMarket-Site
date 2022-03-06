@@ -36,12 +36,13 @@ class ProduitsController extends AbstractController
         $form->get('categorie')->setData($produit->getCategories()[0]->getNom());
         $form->get('nom')->setData($produit->getNom());
         $form->get('qty')->setData($produit->getQty());
-
+        $form->get('prix')->setData($produit->getPrix());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $fournisseurName = $form->get('fournisseur')->getData();
             $qty = $form->get('qty')->getData();
+            $prixProduit = $form->get('prix')->getData();
             $name = $form->get('nom')->getData();
             $category = $form->get('categorie')->getData();
             $response = $this->forward('App\Controller\ApiControllers\Produits\ProduitsApiController::patchProduit', [
@@ -49,7 +50,8 @@ class ProduitsController extends AbstractController
                 'fournisseur'=>$fournisseurName,
                 'qty'=>$qty,
                 'categorie'=>$category,
-                'nom'=>$name
+                'nom'=>$name,
+                'prix'=>$prixProduit
             ]);
             dd($response);
             return $this->redirectToRoute('produits_index');
@@ -65,7 +67,6 @@ class ProduitsController extends AbstractController
     public function creationProduit(Request $request): Response
     {
         $form = $this->createForm(ProduitsFormType::class);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -73,11 +74,14 @@ class ProduitsController extends AbstractController
             $qty = $form->get('qty')->getData();
             $name = $form->get('nom')->getData();
             $category = $form->get('categorie')->getData();
+            $category = $form->get('categorie')->getData();
+            $prix = $form->get('prix')->getData();
             $response = $this->forward('App\Controller\ApiControllers\Produits\ProduitsApiController::postProduit', [
                 'fournisseur'=>$fournisseurName,
                 'qty'=>$qty,
                 'categorie'=>$category,
-                'nom'=>$name
+                'nom'=>$name,
+                'prix'=>$prix
             ]);
             dd($response);
             return $this->redirectToRoute('produits_index');

@@ -6,6 +6,7 @@ use App\Entity\Utilisateurs;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,7 +38,7 @@ class InformationPaiementType extends AbstractType
             ->add('codePostal', NumberType::class, [
                 "label"=>"Code Postal"
             ])
-            ->add('phone', NumberType::class, [
+            ->add('phone', TelType::class, [
                 "label"=> "Numéro de Téléphone"
             ])
         ;

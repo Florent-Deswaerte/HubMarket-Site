@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProduitsController extends AbstractController
 {
 
-    public function __construct(private ProduitsRepository $produitsRepository, private HelperController $helper)
+    public function __construct(private ProduitsRepository $produitsRepository, private CategoriesRepository $categoriesRepository, private HelperController $helper)
     {}
     
     #[Route('/', name: 'index')]
@@ -32,9 +32,9 @@ class ProduitsController extends AbstractController
     {
         $produit = $this->produitsRepository->findOneById($id);
         $form = $this->createForm(ProduitsFormType::class);
-        $form->get('fournisseur')->setData($produit->getFournisseurs()[0]->getLibelle());
-        $form->get('categorie')->setData($produit->getCategories()[0]->getNom());
-        $form->get('nom')->setData($produit->getNom());
+        $form->get('fournisseur')->setData("Fournisseur - {$produit->getFournisseurs()[0]->getLibelle()}");
+        $form->get('categorie')->setData("Catégorie - {$produit->getCategories()[0]->getNom()}");
+        $form->get('nom')->setData("Nom - {$produit->getNom()}");
         $form->get('qty')->setData($produit->getQty());
         $form->get('prix')->setData($produit->getPrix());
         $form->handleRequest($request);
@@ -59,7 +59,7 @@ class ProduitsController extends AbstractController
 
         $form->handleRequest($request);
         return $this->render('produits/editProduit.html.twig', [
-            'form'=>$form->createView()
+            'form'=>$form->createView(),
         ]);
     }
 
@@ -68,7 +68,7 @@ class ProduitsController extends AbstractController
     {
         $form = $this->createForm(ProduitsFormType::class);
         $form->handleRequest($request);
-
+        $categories = $this->categoriesRepository->findAll();
         if ($form->isSubmitted() && $form->isValid()) {
             $fournisseurName = $form->get('fournisseur')->getData();
             $qty = $form->get('qty')->getData();
@@ -83,12 +83,11 @@ class ProduitsController extends AbstractController
                 'nom'=>$name,
                 'prix'=>$prix
             ]);
-            dd($response);
             return $this->redirectToRoute('produits_index');
         }
         return $this->render('produits/createProduit.html.twig', [
             'form'=>$form->createView(),
-            'controller_name' => 'ProduitsController',
+            'categories'=>$categories
         ]);
     }
     

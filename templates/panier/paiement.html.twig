@@ -2,151 +2,53 @@
 
 {% block title %}{{parent()}}Panier{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/paiement.css') }}" type="text/css">
+{% endblock %}
+
 {% block body %}
 <div class="container">
-    Paiement
+    <section class="checkout spad">
+        <h6 class="checkout__title">Paiement</h6>
 
-    <form action="{{path("panier_subscription_paiement", {'id': commande.id}) }}" method="post" id="payment-form">
-        <!--Formulaire de paiement relié au script js-->
-        <div id="card-elements"></div>
+        <form action="{{path("panier_subscription_paiement", {'id': commande.id}) }}" method="post" id="payment-form">
+            <label>
+                <div id="card-element" class="field is-empty my-6"></div>
+                <span><span>Credit or debit card</span></span>
+            </label>
+        
+            <button type="submit" class="site-btn btn-paiement">Acheter {{ commande.TotalCommande|number_format(2, ',', '.') }} €</button>
 
-        <!--Générer message erreur-->
-        <div id="card-errors" role="alert"></div>
-    <button>Acheter {{ commande.TotalCommande}} €</button>
-    </form>
+            <div class="outcome">
+                <div class="error" role="alert"></div>
+
+                <div class="success">
+                    Success! Your Stripe token is <span class="token"></span>
+                </div>
+            </div>
+        </form>
+    </section>
 </div>
 {% endblock %}
 
 {% block javascripts %}
-<script src="//js.stripe.com/v3/"></script>
-<script>
-    //Vérifie l'environnement et donne la clé approprié
-    {% if app_environement == 'dev' %}
-        var stripeToken = "{{ stripe_public_key_test }}";
-    {% else %}
-        var stripeToken = "{{ stripe_public_key_live }}";
-    {% endif %}
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        {% if app_environement == 'dev' %}
+            const stripeKey = "{{ stripe_public_key_test }}";
+        {% else %}
+            const stripeKey = "{{ stripe_public_key_live }}";
+        {% endif %}
 
-    //Création des variables
-    var stripe = Stripe(stripeToken); //Récupération objet stripe et le token dedans
-    var elements = stripe.elements(); //Récupération elements objet stripe
-    var subscription = "{{ commande.id }}"; //Récupération id de la commande
-    var clientSecret = "{{ intentSecret }}"; //Récupération intentSecret
-    var cardholderEmail = "{{ utilisateur.email }}"; //Récupération email pour lier la carte à un utilisateur
+        //Création des variables
+        const stripe = Stripe(stripeKey); //Récupération objet stripe et le token dedans
+        const elements = stripe.elements(); //Récupération elements objet stripe
+        const subscription = "{{ commande.id }}"; //Récupération id de la commande
+        const clientSecret = "{{ intentSecret }}"; //Récupération intentSecret
+        const cardHolderEmail = "{{ utilisateur.email }}"; //Récupération email pour lier la carte à un utilisateur
 
-    console.log('client secret', clientSecret);
+    </script>
 
-    //Style en json
-    const styleCostum = {
-    base: {
-      iconColor: '#c4f0ff',
-      color: 'black',
-      fontWeight: '500',
-      fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
-      fontSize: '16px',
-      fontSmoothing: 'antialiased',
-      ':-webkit-autofill': {
-        color: '#fce883',
-      },
-      '::placeholder': {
-        color: '#87BBFD',
-      },
-    },
-    invalid: {
-      iconColor: '#aa1e1e',
-      color: '#aa1e1e',
-    },
-    cardNumber: {
-      backgroundColor: '#aa1e1e',
-    },
-    };
-
-    //Relier la form à l'ojet stripe
-    //Je créer une carte stripe
-    var card = elements.create('card', {
-        style: {
-            base: {
-            iconColor: '#666EE8',
-            color: '#31325F',
-            lineHeight: '40px',
-            fontWeight: 300,
-            fontFamily: 'Helvetica Neue',
-            fontSize: '15px',
-
-            '::placeholder': {
-                color: '#CFD7E0',
-            },
-            },
-        }
-    });
-    card.mount("#card-elements");
-
-    //Message erreur
-    card.addEventListener('change', function(event){
-        var displayError = document.getElementById('card-errors');
-        if(event.error){
-            displayError.textContent = event.error.message;
-        } else {
-            displayError.textContent = '';
-        }
-    });
-
-    var form = document.getElementById("payment-form");
-    form.addEventListener("submit", function(event) {
-        //Stop le chargement de la page
-        event.preventDefault();
-
-        stripe.handleCardPayment(
-            clientSecret,
-            card,
-            {
-                payment_method_data: {
-                    billing_details: {
-                        email: cardholderEmail
-                    }
-                }
-            }
-        ).then((result) => {
-            if(result.error){
-
-            } else if ('paymentIntent' in result){
-                //console.log('Result : ', result);
-                stripeTokenHandler(result.paymentIntent);
-                //console.log('Result intentpayement : ', result.paymentIntent);
-            }
-        }) //Retour réponse paiement
-    });
-
-    function stripeTokenHandler(intent){
-        var form = document.getElementById("payment-form");
-        //Information à envoyer dans notre formulaire en post
-        var InputIntentId = document.createElement('input');
-        var InputIntentPaymentMethod = document.createElement('input');
-        var InputIntentStatus = document.createElement('input');
-        var InputIntentSubscription = document.createElement('input');
-
-        InputIntentId.setAttribute('type', 'hidden');
-        InputIntentId.setAttribute('name', 'stripeIntentId');
-        InputIntentId.setAttribute('value', intent.id);
-
-        InputIntentPaymentMethod.setAttribute('type', 'hidden');
-        InputIntentPaymentMethod.setAttribute('name', 'stripeIntentPaymentMethod');
-        InputIntentPaymentMethod.setAttribute('value', intent.payment_method);
-
-        InputIntentStatus.setAttribute('type', 'hidden');
-        InputIntentStatus.setAttribute('name', 'stripeIntentStatus');
-        InputIntentStatus.setAttribute('value', intent.status);
-
-        InputIntentSubscription.setAttribute('type', 'hidden');
-        InputIntentSubscription.setAttribute('name', 'subscription');
-        InputIntentSubscription.setAttribute('value', subscription);
-
-        //Mettre tous dans le form
-        form.appendChild(InputIntentId);
-        form.appendChild(InputIntentPaymentMethod);
-        form.appendChild(InputIntentStatus);
-        form.appendChild(InputIntentSubscription);
-        form.submit();
-    }
-</script>
+    <script src="{{ asset('js/stripe.js') }}" defer></script>
 {% endblock %}

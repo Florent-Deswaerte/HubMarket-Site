@@ -56,7 +56,8 @@ class CommandesRepository extends ServiceEntityRepository
             ->Where('c.statusStripe is not null')
             ->andWhere('c.utilisateurs = :id')
             ->setParameter(':id', $id)
-            ->addOrderBy('c.DateCommande', 'DESC')
+            ->orderBy('c.DateCommande', 'DESC')
+            ->addOrderBy('c.id', 'DESC')
             ->getQuery()
             ->getResult()
         ;

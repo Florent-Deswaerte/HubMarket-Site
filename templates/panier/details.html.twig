@@ -97,6 +97,7 @@
                                         <h4 class="order__title">Votre commande</h4>
                                         <div class="checkout__order__products">Produits <span>Total</span></div>
                                         <ul class="checkout__total__products">
+
                                             {% for lc in lcommande %}
                                                 <li>{{lc.Produits.Nom}} <span>{{lc.Prix|number_format(2, ',', '.') }} €</span></li>
                                             {% endfor %}

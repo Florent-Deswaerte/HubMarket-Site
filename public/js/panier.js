@@ -69,12 +69,16 @@ buttonsQuantity.forEach(button => {
 
 function comptage() {
     let texteTotal = document.querySelectorAll('.totalPrice');
+    //Créer un object datas
     let datas = {};
 
+    //Boucle sur tous les texte ayant une quantité pour la récupérer
     textQuantity.forEach(texte => {
+        //Key idproduit et value quantity
         datas[texte.dataset.id] = parseFloat(texte.textContent);
     });
 
+    //Applique le JSON au input du formulaire
     dataCommande.value = JSON.stringify(datas);
 
     let prixGlobal = 0;

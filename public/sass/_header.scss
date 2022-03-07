@@ -1,6 +1,7 @@
 /*---------------------
   Header
 -----------------------*/
+
 .header {
     background: $white-color;
 }
@@ -10,22 +11,9 @@
     padding: 10px 0;
 }
 
-.header__top__left {
-
-    p {
-        color: $white-color;
-        margin-bottom: 0;
-    }
-}
-
-.header__top__right {
-    text-align: right;
-}
-
 .header__top__links {
     display: inline-block;
     margin-right: 25px;
-
     a {
         color: $white-color;
         font-size: 13px;
@@ -33,7 +21,6 @@
         letter-spacing: 2px;
         margin-right: 28px;
         display: inline-block;
-
         &:last-child {
             margin-right: 0;
         }
@@ -43,16 +30,13 @@
 .header__top__hover {
     display: inline-block;
     position: relative;
-
     &:hover {
-
         ul {
             top: 24px;
             opacity: 1;
             visibility: visible;
         }
     }
-
     span {
         color: $white-color;
         font-size: 13px;
@@ -60,15 +44,13 @@
         letter-spacing: 2px;
         display: inline-block;
         cursor: pointer;
-
         i {
-            font-size: 20px;       
+            font-size: 20px;
             position: relative;
             top: 3px;
             right: 2px;
         }
     }
-
     ul {
         background: $white-color;
         display: inline-block;
@@ -81,7 +63,6 @@
         z-index: 3;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         @include transition(all, .3s);
-
         li {
             list-style: none;
             font-size: 13px;
@@ -94,7 +75,6 @@
 
 .header__logo {
     padding: 30px 0;
-
     a {
         display: inline-block;
     }
@@ -103,46 +83,34 @@
 .header__menu {
     text-align: center;
     padding: 26px 0 25px;
-
     ul {
-
         li {
             list-style: none;
             display: inline-block;
             margin-right: 45px;
             position: relative;
-
             &.active {
-
                 a {
-                    
-                    
                     &:after {
                         transform: scale(1);
                     }
                 }
             }
-
             &:hover {
-
                 a {
-                    
                     &:after {
-                       transform: scale(1);
+                        transform: scale(1);
                     }
                 }
-
                 .dropdown {
                     top: 32px;
                     opacity: 1;
                     visibility: visible;
                 }
             }
-
             &:last-child {
                 margin-right: 0;
             }
-
             .dropdown {
                 position: absolute;
                 left: 0;
@@ -155,25 +123,21 @@
                 opacity: 0;
                 visibility: hidden;
                 @include transition(all, .3s);
-
                 li {
                     display: block;
                     margin-right: 0;
-
                     a {
                         font-size: 14px;
                         color: $white-color;
                         font-weight: 400;
                         padding: 5px 20px;
                         text-transform: capitalize;
-
                         &:after {
                             display: none;
                         }
                     }
                 }
             }
-
             a {
                 font-size: 18px;
                 color: $heading-color;
@@ -181,7 +145,6 @@
                 font-weight: 600;
                 position: relative;
                 padding: 3px 0;
-
                 &:after {
                     position: absolute;
                     left: 0;
@@ -201,12 +164,10 @@
 .header__nav__option {
     text-align: right;
     padding: 30px 0;
-
     a {
         display: inline-block;
         margin-right: 26px;
         position: relative;
-
         span {
             color: #0d0d0d;
             font-size: 11px;
@@ -214,12 +175,10 @@
             left: 5px;
             top: 8px;
         }
-
         &:last-child {
             margin-right: 0;
         }
     }
-
     .price {
         font-size: 15px;
         color: $heading-color;

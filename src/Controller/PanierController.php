@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Panier;
+use App\Entity\Produits;
 use App\Entity\Utilisateurs;
 use App\Entity\Commandes;
 use App\Manager\ProduitsManager;
@@ -18,6 +19,7 @@ use App\Entity\LCommandes;
 use App\Form\InformationPaiementType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 
 #[Route('/panier', name: 'panier_')]
 class PanierController extends AbstractController
@@ -36,13 +38,31 @@ class PanierController extends AbstractController
     public function index(): Response
     {
         $panier = $this->getUser()->getPanier();
-        //dd($panier);
-        $panierProduits = $panier->getProduits();
+        //Si on a un panier alors ont récupére les produits sinon null
+        $panierProduits = ($panier) ? $panier->getProduits() : null;
+
         return $this->render('panier/index.html.twig', [
             'controller_name' => 'PanierController',
             'panier' => $panier,
             'produits' => $panierProduits,
         ]);
+    }
+
+    // Supprimer un produit du panier
+    #[Route('/delete/{id}', name: 'delete')]
+    //ParametreConverter qui prend l'id dans l'url et fait la relation avec l'entité
+    #[Entity('produit', options: ['id' => 'id'])]
+    public function delete(Produits $produit): Response
+    {
+        /** @var Panier $panier */
+        $panier = $this->getUser()->getPanier();
+        $panier->removeProduit($produit);
+
+        $this->entityManager->flush();
+
+        $this->addFlash('danger', '<b>' . $produit->getNom() . '</b> à bien été retiré !');
+
+        return $this->redirectToRoute('panier_index');
     }
 
     //Page contenant les informations personnelles de l'utilisateur
@@ -118,6 +138,8 @@ class PanierController extends AbstractController
                 $utilisateur->setPanier(null);
                 $this->entityManager->flush();
                 $this->helper->removeEntityObject($panier);
+
+                $this->addFlash("success", "Paiement réussi !");
                 return $this->redirectToRoute('panier_historique_commande', [
                     'commande' => $commande,
                 ]);
@@ -143,91 +165,61 @@ class PanierController extends AbstractController
     #[Route('/paiement_commande', name: 'paiement_commande')]
     public function panierPaiementCommande(Request $request): Response
     {
-        // id produit & quantité
+        // Récupération du json contenant id produit & quantité
         $dataCommande = \json_decode($request->request->get('dataCommande'), true);
         $prixTotal = $request->request->get('valueTotal');
 
-        $utilisateur = $this->getUser();
-        $utilisateurID = $utilisateur->getId();
-        $commandeStatus = $this->commandesRepository->findOneByStatus($utilisateurID);
-        if(isset($_POST['btnCommande'])){
-            if ($commandeStatus){
-                //Je modifie la commande existante avec de nouvelles données
-                $date = new \DateTime();
-                $dateArrivee = new \DateTime();
-                //J'ajoute 1 mois à la date d'arrivée
-                $dateArrivee->modify('+1 month');
-                $commandeStatus->setUtilisateurs($utilisateur);
-                $commandeStatus->setDateCommande($date);
-                $commandeStatus->setDateArrivee($dateArrivee);
-                $commandeStatus->setTotalCommande($prixTotal);
+        $commandeStatus = $this->commandesRepository->findOneByStatus($this->getUser()->getId());
 
-                //Je sauvegarde la commande
-                $this->helper->saveEntityObject($commandeStatus);
-                //Je set l'utilisateur à la commande
-                $utilisateur->addCommande($commandeStatus);
-                //Je sauvegarde l'utilisateur
-                $this->helper->saveEntityObject($utilisateur);
+        if ($commandeStatus) {
+            $lcommandes = $commandeStatus->getCommandes();
 
-                //Je créer des lignes commandes contenant les produits de la commande
-                $produits = $this->getUser()->getPanier()->getProduits();
-                foreach ($produits as $produit){
-                    $prix = $produit->getPrix();
-                    $ligneCommandes = $commandeStatus->getCommandes();
-
-                    foreach ($ligneCommandes as $ligneCommande) {
-                        $ligneCommande->setQty($this->findQuantity($dataCommande, $produit->getId()));
-                        $ligneCommande->setPrix($prix);
-                        $ligneCommande->setCommandes($commandeStatus);
-                        $ligneCommande->setProduits($produit);
-                    }
-
-                    //Je sauvegarde la ligne commande
-                    $this->entityManager->flush();
-                }
-                return $this->redirectToRoute('panier_details', [
-                    'id' => $commandeStatus->getId(),
-                ]);
-            } else {
-                //Je créer une commande avec de nouvelles données
-                $date = new \DateTime();
-                $dateArrivee = new \DateTime();
-                //J'ajoute 1 mois à la date d'arrivée
-                $dateArrivee->modify('+1 month');
-                $commande = new Commandes();
-                $commande->setUtilisateurs($utilisateur);
-                $commande->setDateCommande($date);
-                $commande->setDateArrivee($dateArrivee);
-                $commande->setTotalCommande($prixTotal);
-
-                //Je sauvegarde la commande
-                $this->helper->saveEntityObject($commande);
-                //Je set l'utilisateur à la commande
-                $utilisateur->addCommande($commande);
-                //Je sauvegarde l'utilisateur
-                $this->helper->saveEntityObject($utilisateur);
-
-                //Je créer des lignes commandes contenant les produits de la commande
-                $produits = $this->getUser()->getPanier()->getProduits();
-                foreach ($produits as $produit){
-                    $prix = $produit->getPrix();
-                    $ligneCommande = new LCommandes();
-                    $ligneCommande->setQty($this->findQuantity($dataCommande, $produit->getId()));
-                    $ligneCommande->setPrix($prix);
-                    $ligneCommande->setCommandes($commande);
-                    $ligneCommande->setProduits($produit);
-                    //Je sauvegarde la ligne commande
-                    $this->helper->saveEntityObject($ligneCommande);
-                }
-                return $this->redirectToRoute('panier_details', [
-                    'id' => $commande->getId(),
-                ]);
+            foreach ($lcommandes as $lcommande) {
+                $this->entityManager->remove($lcommande);
             }
-        };
+            $this->entityManager->remove($commandeStatus);
+            $this->entityManager->flush();
+        }
+
+        $commande = new Commandes();
+
+        //Je créer une commande avec de nouvelles données
+        $dateArrivee = new \DateTime();
+        $dateArrivee->modify('+1 month');
+
+        $commande->setUtilisateurs($this->getUser())
+                    ->setDateCommande(new \DateTime())
+                    ->setDateArrivee($dateArrivee)
+                    ->setTotalCommande($prixTotal);
+
+        //Je sauvegarde la commande
+        $this->helper->saveEntityObject($commande);
+        //Je set l'utilisateur à la commande
+        $this->getUser()->addCommande($commande);
+        //Je sauvegarde l'utilisateur
+        $this->helper->saveEntityObject($this->getUser());
+
+        //Je créer des lignes commandes contenant les produits de la commande
+        $produits = $this->getUser()->getPanier()->getProduits();
+        foreach ($produits as $produit){
+            $ligneCommande = new LCommandes();
+            $ligneCommande->setQty($this->findQuantity($dataCommande, $produit->getId()))
+                            ->setPrix($ligneCommande->getQty() * $produit->getPrix())
+                            ->setCommandes($commande)
+                            ->setProduits($produit);
+            //Je sauvegarde la ligne commande
+            $this->helper->saveEntityObject($ligneCommande);
+        }
+
+        return $this->redirectToRoute('panier_details', [
+            'id' => $commande->getId(),
+        ]);
     }
 
+    //Récupère un tableau avec quantité et id produit
     public function findQuantity(array $allQuantity, int $idProduit): int
     {
+        //On boucle sur le tableau, on met en key l'id du produit et en value la quantité
        foreach ($allQuantity as $key => $value) {
            if ($key === $idProduit) { return $value; }
        }

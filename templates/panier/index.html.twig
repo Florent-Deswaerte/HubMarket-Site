@@ -3,11 +3,8 @@
 {% block title %}{{parent()}}Panier{% endblock %}
 
 {% block body %}
-    {% if panier is null %}
-        <h1>Si panier == NULL</h1>
-        <button id="createPanier">Créer et ajoute au panier et reload page</button>
-    {% else %}
-        <!-- Section Chemin accès -->
+<div class="container">
+    <!-- Section Chemin accès -->
         <section class="breadcrumb-option">
             <div class="container">
                 <div class="row">
@@ -23,8 +20,21 @@
                 </div>
             </div>
         </section>
-        <!-- Fin Section Chemin accès -->
+    <!-- Fin Section Chemin accès -->
 
+    {# Boucle sur les flash de type danger de l'app #}
+    {% for label, messages in app.flashes(['danger']) %}
+        {# Boucle sur tous les messages #}
+        {% for message in messages %}
+            {# Affiche le message #}
+            <div class="alert alert-{{ label }} mt-2" role="alert">
+                {{ message | raw }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    
+    {# Si j'ai des produits #}
+    {% if produits|length > 0 %}
         <!-- Section Panier -->
         <section class="shopping-cart spad">
             <div class="container">
@@ -82,7 +92,9 @@
                                         <!--Fin Total du produit-->
 
                                         <!--Supprimer du produit-->
-                                        <td class="cart__close"><i class="fa fa-close"></i></td>
+                                        <td class="cart__close">
+                                            <a href="{{ path('panier_delete', { 'id' : produit.id } ) }}"><i class="fa fa-close"></i></a>
+                                        </td>
                                         <!--Fin Supprimer du produit-->
                                     </tr>
                                     {% endfor %}
@@ -111,23 +123,7 @@
                         </div> #}
                         <!--Fin Code promo-->
 
-
-
-
-
-
                         <!--Total du panier-->
-                        {# <div class="cart__total">
-                            <h6>Total Panier</h6>
-                            <ul>
-                                <li>Total <span id="totalGolbal">0</span></li>
-                                <input type="hidden"></input>
-                            </ul>
-                            <a href="{{ path('panier_paiement_commande', {'total': 1500})}}" class="primary-btn">Paiement</a>
-                        </div> #}
-
-
-
                         <div class="cart__total">
                                 <h6>Total Panier</h6>
                                 <ul>
@@ -140,19 +136,19 @@
                             </form>
                         </div>
                         <!--Fin Total du panier-->
-
-
-
-
-
-
-
                     </div>
                 </div>
             </div>
         </section>
         <!-- Fin Section Panier -->
+    {% else %}
+        {# Message du panier vide #}
+        <div class="alert alert-danger" role="alert">
+            Votre panier est vide !
+        </div>
     {% endif %}
+
+</div>
 {% endblock %}
 
 {% block javascripts %}{{parent()}}

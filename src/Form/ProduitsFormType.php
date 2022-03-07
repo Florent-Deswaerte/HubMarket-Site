@@ -2,9 +2,12 @@
 
 namespace App\Form;
 
-use App\Entity\Produits;
+use App\Entity\Categories;
+use App\Entity\Fournisseurs;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -19,8 +22,22 @@ class ProduitsFormType extends AbstractType
             ->add('nom', TextType::class, ['required' => true, 'attr'=>['placeholder' => 'Nom']])
             ->add('qty', IntegerType::class, ['required' => true, 'attr'=> ['min'=>0, 'placeholder' => 'Quantité']])
             ->add('prix', MoneyType::class, ['required'=>true, 'attr'=>['placeholder' => 'Prix']])
-            ->add('fournisseur', TextType::class, ['required' => true, 'attr'=>['placeholder' => 'Fournisseur']])
-            ->add('categorie', TextType::class, ['required' => true, 'attr'=>['placeholder' => 'Catégorie']])
+            ->add('fournisseur', EntityType::class, [
+                'class' => Fournisseurs::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.id', 'ASC');
+                },
+                'choice_label' => 'libelle',
+            ])
+            ->add('categorie', EntityType::class, [
+                'class' => Categories::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.id', 'ASC');
+                },
+                'choice_label' => 'nom',
+            ])
             ->add('Submit', SubmitType::class)
         ;
     }

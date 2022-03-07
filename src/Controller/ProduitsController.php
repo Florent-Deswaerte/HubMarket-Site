@@ -97,4 +97,18 @@ class ProduitsController extends AbstractController
         dd($response);
         return $this->redirectToRoute('produits_index');
     }
+
+    #[Route('/shop', name : 'liste')]
+    public function listProduit(Request $request): Response
+    {
+        $response = $this->forward('App\Controller\ApiControllers\Produits\ProduitsApiController::getAllProduits');
+        dd($response);
+        return $this->render('produits/shop.html.twig');
+    }
+
+    #[Route('/details/{id}', name : 'details')]
+    public function infoProduit(Request $request, int $id): Response
+    {
+        return $this->render('produits/detailsProduit.html.twig');
+    }
 }

@@ -17,4 +17,16 @@ class CategoriesApiController extends AbstractController
 {
     public function __construct(private CategoriesRepository $categoriesRepository, private APIUtilities $apiUtilities, private HelperController $helper)
     {}
+
+        // GET
+        #[Route("/api/categories", name: 'apiGetCategories', methods: 'GET')]
+        public function getAllCategories(){
+            $categories = $this->categoriesRepository->findBy(array(), array('id'=>'ASC'));
+            if(empty($categories)){
+                return $this->apiUtilities->EmptyResponse("La liste est vide!");
+            }
+            $data = $this->apiUtilities->formatDataArray($categories);
+            $responseArray = array('api:responseCode'=>200, 'api:responseInfo' => "La liste des catégories a bien été envoyée", 'api:membersCount'=>count($categories),'api:members' => $data ); 
+            return $this->apiUtilities->JSONResponseOk($responseArray);
+        }
 }

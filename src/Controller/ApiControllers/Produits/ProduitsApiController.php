@@ -39,6 +39,8 @@ class ProduitsApiController extends AbstractController
         $nomCategorie = $request->get('categorie');
         $nomProduit = $request->get('nom');
         $qtyProduit = $request->get('qty');
+        $prixProduit = $request->get('prix');
+        $produit->setPrix($prixProduit);
         $produit->setNom($nomProduit);
         $produit->setQty($qtyProduit);
         $fournisseur = $this->fournisseursRepository->findOneByLibelle($nomFournisseur);
@@ -72,6 +74,8 @@ class ProduitsApiController extends AbstractController
         $nomCategorie = $request->get('categorie');
         $nomProduit = $request->get('nom');
         $qtyProduit = $request->get('qty');
+        $prixProduit = $request->get('prix');
+        $produit->setPrix($prixProduit);
         $produit->setNom($nomProduit);
         $produit->setQty($qtyProduit);
         $fournisseur = $this->fournisseursRepository->findOneByLibelle($nomFournisseur);
@@ -136,7 +140,7 @@ class ProduitsApiController extends AbstractController
     public function getAllProduits(){
         $produits = $this->produitsRepository->findBy(array(), array('id'=>'ASC'));
         if(empty($produits)){
-            return $this->apiUtilities->NotFoundResponse("La liste est vide!");
+            return $this->apiUtilities->EmptyResponse("La liste est vide!");
         }
         $data = $this->apiUtilities->formatDataArray($produits);
         $responseArray = array('api:responseCode'=>200, 'api:responseInfo' => "La liste des produits a bien été envoyée", 'api:membersCount'=>count($produits),'api:members' => $data ); 

@@ -95,7 +95,7 @@ use Doctrine\Common\Collections\ArrayCollection;
         ],
     ],
     itemOperations: [
-        'patchUser'=> [
+        'patchProduit'=> [
             'method' => 'PATCH',
             'filters' => [],
             'openapi_context' => [
@@ -390,6 +390,7 @@ class Produits
             'id'=>$this->getId(),
             'nom'=>$this->getNom(),
             'qty'=>$this->getQty(),
+            'prix'=>$this->getPrix(),
             'produits'=>$this->getProduits(),
             'fournisseurs'=>$this->getFournisseurs(),
             'categories'=>$this->getCategories(),

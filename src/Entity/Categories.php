@@ -66,4 +66,13 @@ class Categories
 
         return $this;
     }
+
+    public function getData(): array
+    {
+        $data = array(
+            'id'=>$this->getId(),
+            'nom'=>$this->getNom(),
+        );
+        return $data;
+    }
 }

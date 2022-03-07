@@ -140,7 +140,7 @@ class ProduitsApiController extends AbstractController
     public function getAllProduits(){
         $produits = $this->produitsRepository->findBy(array(), array('id'=>'ASC'));
         if(empty($produits)){
-            return $this->apiUtilities->NotFoundResponse("La liste est vide!");
+            return $this->apiUtilities->EmptyResponse("La liste est vide!");
         }
         $data = $this->apiUtilities->formatDataArray($produits);
         $responseArray = array('api:responseCode'=>200, 'api:responseInfo' => "La liste des produits a bien été envoyée", 'api:membersCount'=>count($produits),'api:members' => $data ); 

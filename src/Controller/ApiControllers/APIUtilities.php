@@ -73,6 +73,14 @@ class APIUtilities extends AbstractController
         );
     }
 
+    public function EmptyResponse(string $info) : Response
+    {
+        return new Response( 
+            $info,
+            204
+        );
+    }
+
     public function NotAuthorizedResponse(string $info) : Response
     {
         return new Response( 

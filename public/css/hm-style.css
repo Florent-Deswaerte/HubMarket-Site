@@ -1,0 +1,23 @@
+.__form {
+    justify-content: center;
+    display: flex;
+}
+
+.__form form input {
+    font-size: 14px;
+    color: #b7b7b7;
+    height: 50px;
+    border: 1px solid #e1e1e1;
+    padding-left: 20px;
+}
+
+.__form form button[type="submit"] {
+    color: #111111;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid #e1e1e1;
+    padding: 14px 35px;
+    display: inline-block;
+}

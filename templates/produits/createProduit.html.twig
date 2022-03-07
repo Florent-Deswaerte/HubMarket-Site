@@ -3,11 +3,14 @@
 {% block title %}{{parent()}}Produits - Création{% endblock %}
 
 {% block body %}
+<div class="__form">
 {{ form_start(form) }}
     {{ form_widget(form.nom) }}
     {{ form_widget(form.qty) }}
     {{ form_widget(form.fournisseur) }}
     {{ form_widget(form.categorie) }}
-    {{ form_widget(form.Submit) }}
+    {{ form_widget(form.prix) }}
+    {{ form_widget(form.Submit, { 'label': 'Envoyer' }) }}
 {{ form_end(form) }}
+</div>
 {% endblock %}

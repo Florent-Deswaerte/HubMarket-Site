@@ -16,11 +16,11 @@ class ProduitsFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom', TextType::class, ['required' => true])
-            ->add('qty', IntegerType::class, ['required' => true, 'attr'=> ['min'=>0]])
-            ->add('prix', MoneyType::class, ['required'=>true])
-            ->add('fournisseur', TextType::class, ['required' => true])
-            ->add('categorie', TextType::class, ['required' => true])
+            ->add('nom', TextType::class, ['required' => true, 'attr'=>['placeholder' => 'Nom']])
+            ->add('qty', IntegerType::class, ['required' => true, 'attr'=> ['min'=>0, 'placeholder' => 'Quantité']])
+            ->add('prix', MoneyType::class, ['required'=>true, 'attr'=>['placeholder' => 'Prix']])
+            ->add('fournisseur', TextType::class, ['required' => true, 'attr'=>['placeholder' => 'Fournisseur']])
+            ->add('categorie', TextType::class, ['required' => true, 'attr'=>['placeholder' => 'Catégorie']])
             ->add('Submit', SubmitType::class)
         ;
     }

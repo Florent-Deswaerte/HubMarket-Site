@@ -3,5 +3,9 @@
 {% block title %}{{parent()}}Shop{% endblock %}
 
 {% block body %}
-
+    {% for produit in produits %}
+        <p>Id : {{ produit.id }}</p>
+        <p>Nom : {{ produit.nom }}</p>
+        <p>Prix : {{ produit.prix }}</p>
+    {% endfor %}
 {% endblock %}

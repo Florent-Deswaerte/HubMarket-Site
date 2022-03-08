@@ -3,12 +3,17 @@
 {% block title %}{{parent()}}Panier{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<!--Main layout-->
+    {# Boucle sur les flash de type danger de l'app #}
+    {% for label, messages in app.flashes(['success']) %}
+        {# Boucle sur tous les messages #}
+        {% for message in messages %}
+            {# Affiche le message #}
+            <div class="alert alert-{{ label }} mt-2" role="alert">
+                {{ message | raw }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    
     <main class="pt-5 mx-lg-5">
         <div class="container-fluid mt-5">
             <div class="card mb-4 wow fadeIn">
@@ -34,13 +39,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {% for commandes in commande %}
+
+                                {# Liste des commandes de l'utilisateurs #}
+                                {% for commande in commandes %}
                                     <tr>
-                                        <td>{{ commandes.id }}</td>
-                                        <td>{{ commandes.DateCommande }}</td>
-                                        <td>{{ commandes.TotalCommande|number_format(2, ',', '.') }} €</td>
-                                        <td>{{ commandes.brand_stripe }}</td>
-                                        <td><span class="badge badge-success">{{ commandes.status_stripe }}</span></td>
+                                        <td>{{ commande.id }}</td>
+                                        <td>{{ commande.DateCommande|date("d/m/Y") }}</td>
+                                        <td>{{ commande.TotalCommande|number_format(2, ',', '.') }} €</td>
+                                        <td>{{ commande.brandStripe }}</td>
+                                        <td><span class="badge badge-success">{{ commande.statusStripe }}</span></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

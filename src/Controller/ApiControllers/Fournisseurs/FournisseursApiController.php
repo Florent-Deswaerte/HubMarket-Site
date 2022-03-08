@@ -26,7 +26,7 @@ class FournisseursApiController extends AbstractController
             return $this->apiUtilities->EmptyResponse("La liste est vide!");
         }
         $data = $this->apiUtilities->formatDataArray($fournisseurs);
-        $responseArray = array('api:responseCode'=>200, 'api:responseInfo' => "La liste des fournisseurs a bien été envoyée", 'api:membersCount'=>count($fournisseurs),'api:members' => $data ); 
+        $responseArray = array('api:responseCode'=>200, 'api:responseInfo' => "La liste des fournisseurs a bien été envoyée", 'api:membersCount'=>count($fournisseurs),'api:members' => $data );
         return $this->apiUtilities->JSONResponseOk($responseArray);
     }
 }

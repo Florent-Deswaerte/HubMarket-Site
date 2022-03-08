@@ -3,23 +3,115 @@
 {% block title %}{{parent()}}Panier{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+            <!-- Checkout Section Begin -->
+            <section class="checkout spad">
+                <div class="container">
+                    <div class="checkout__form">
+                            <div class="row">
+                                <div class="col-lg-8 col-md-6">
+                                    <h6 class="checkout__title">Informations Personnelles </h6>
+                                    {{ form_start(form) }}
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="checkout__input">
+                                                    {{ form_row(form.prenom) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkout__input">
+                                                    {{ form_row(form.nom) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="checkout__input">
+                                            {{ form_row(form.pays) }}
+                                        </div>
+                                        <div class="checkout__input">
+                                            {{ form_row(form.ville) }}
+                                        </div>
+                                        <div class="checkout__input">
+                                            {{ form_row(form.adresse) }}
+                                    </div>
+                                    <div class="checkout__input">
+                                        {{ form_row(form.codePostal) }}
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="checkout__input">
+                                                {{ form_row(form.phone) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="checkout__input">
+                                                {{ form_row(form.email) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {# <div class="checkout__input">
+                                        <p>Pays<span>*</span></p>
+                                        <input type="text">
+                                    </div>
+                                    <div class="checkout__input">
+                                        <p>Adresse<span>*</span></p>
+                                        <input type="text" placeholder="Adresse" class="checkout__input__add">
+                                        <input type="text" placeholder="Apt, suite, unité, nom de l'entreprise (facultatif)">
+                                    </div>
+                                    <div class="checkout__input">
+                                        <p>Ville<span>*</span></p>
+                                        <input type="text">
+                                    </div>
+                                    <div class="checkout__input">
+                                        <p>Code Postale<span>*</span></p>
+                                        <input type="text">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="checkout__input">
+                                                <p>Téléphone<span>*</span></p>
+                                                <input type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="checkout__input">
+                                                <p>Email<span>*</span></p>
+                                                <input type="text">
+                                            </div>
+                                        </div>
+                                    </div> #}
+                                    {# Note pour le livreur
+                                    <div class="checkout__input__checkbox">
+                                        <label for="diff-acc">
+                                            Instruction de livraison.
+                                            <input type="checkbox" id="diff-acc">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="checkout__input">
+                                        <p>Instruction de livraison<span>*</span></p>
+                                        <input type="text"
+                                        placeholder="Note complémentaires pour le livreur.">
+                                    </div>#}
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="checkout__order">
+                                        <h4 class="order__title">Votre commande</h4>
+                                        <div class="checkout__order__products">Produits <span>Total</span></div>
+                                        <ul class="checkout__total__products">
 
-<div class="example-wrapper">
-    Utilisateur
-
-        {% for utilisateurs in utilisateur %}
-            <div>
-                <!--Formulaire avec INFO Utilisateur (Adresse, code postale ...)-->
-            </div>
-        {% endfor %}
-        <!--Info commande-->
-        <!--Total prix-->
-        <!--Total prix-->
-    <a href="{{path('panier_paiement', { 'id': commande.id })}}">Acheter</a>
-    <button id="Paiement" onclick="/paiement">Acheter</button>
-</div>
+                                            {% for lc in lcommande %}
+                                                <li>{{lc.Produits.Nom}} <span>{{lc.Prix|number_format(2, ',', '.') }} €</span></li>
+                                            {% endfor %}
+                                        </ul>
+                                        <ul class="checkout__total__all">
+                                            <li>Total <span>{{commande.TotalCommande|number_format(2, ',', '.') }} €</span></li>
+                                        </ul>
+                                        <button type="submit" class="site-btn" name="btnValidationCommande">Procéder au Paiement</button>
+                                    </div>
+                                    {{ form_end(form) }}
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Checkout Section End -->
 {% endblock %}

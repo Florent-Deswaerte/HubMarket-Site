@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class ProduitsFormType extends AbstractType
 {
@@ -20,8 +21,9 @@ class ProduitsFormType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, ['required' => true, 'attr'=>['placeholder' => 'Nom']])
-            ->add('qty', IntegerType::class, ['required' => true, 'attr'=> ['min'=>0, 'placeholder' => 'Quantité']])
+            ->add('qty', IntegerType::class, ['required' => true, 'attr'=> ['min'=>0, 'value'=>0, 'placeholder' => 'Quantité']])
             ->add('prix', MoneyType::class, ['required'=>true, 'attr'=>['placeholder' => 'Prix']])
+            ->add('description', TextareaType::class, ['required'=>true, 'attr'=>['placeholder'=>'Description']])
             ->add('fournisseur', EntityType::class, [
                 'class' => Fournisseurs::class,
                 'query_builder' => function (EntityRepository $er) {

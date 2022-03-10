@@ -33,7 +33,6 @@
             <div class="container">
                 <div class="row justify-content-between align-items-center text-white">
                     <span>Livraison gratuite, retour sous 30 jours ou garantie de remboursement.</span>
-                    
                     <div class="d-flex align-items-center">
                         {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                             <a href="{{ path('app_register') }}" class="mr-2"> <img src="{{ asset('img/icon/add-user.png') }}" class="mr-1">Inscription</a>

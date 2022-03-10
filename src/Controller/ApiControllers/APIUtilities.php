@@ -88,5 +88,13 @@ class APIUtilities extends AbstractController
             '401',
         );
     }
+
+    public function BadRequestResponse(string $info): Response
+    {
+        return new Response(
+            $info,
+            Response::HTTP_BAD_REQUEST,
+        );
+    }
 }
 ?>

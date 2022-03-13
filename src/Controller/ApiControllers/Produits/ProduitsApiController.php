@@ -40,6 +40,8 @@ class ProduitsApiController extends AbstractController
         $nomProduit = $request->get('nom');
         $qtyProduit = $request->get('qty');
         $prixProduit = $request->get('prix');
+        $descriptionProduit = $request->get('description');
+        $produit->setDescription($descriptionProduit);
         $produit->setPrix($prixProduit);
         $produit->setNom($nomProduit);
         $produit->setQty($qtyProduit);
@@ -74,10 +76,12 @@ class ProduitsApiController extends AbstractController
         $nomCategorie = $request->get('categorie');
         $nomProduit = $request->get('nom');
         $qtyProduit = $request->get('qty');
+        $descriptionProduit = $request->get('description');
         $prixProduit = $request->get('prix');
         $produit->setPrix($prixProduit);
         $produit->setNom($nomProduit);
         $produit->setQty($qtyProduit);
+        $produit->setDescription($descriptionProduit);
         $fournisseur = $this->fournisseursRepository->findOneByLibelle($nomFournisseur);
         if(!is_null($fournisseur)) {
             $produit->addFournisseur($fournisseur);

@@ -39,7 +39,7 @@ class CommandesRepository extends ServiceEntityRepository
     public function findOneByStatus($id)
     {
         return $this->createQueryBuilder('c')
-            ->Where('c.status_stripe is null')
+            ->where('c.statusStripe is null')
             ->andWhere('c.utilisateurs = :id')
             ->setParameter(':id', $id)
             ->getQuery()
@@ -53,11 +53,13 @@ class CommandesRepository extends ServiceEntityRepository
     public function findOneByStatusDifferentNull($id)
     {
         return $this->createQueryBuilder('c')
-            ->Where('c.status_stripe is not null')
+            ->Where('c.statusStripe is not null')
             ->andWhere('c.utilisateurs = :id')
             ->setParameter(':id', $id)
+            ->orderBy('c.DateCommande', 'DESC')
+            ->addOrderBy('c.id', 'DESC')
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
 
@@ -68,6 +70,7 @@ class CommandesRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->select('sum(c.TotalCommande)')
+            ->Where('c.statusStripe is not null')
             ->andWhere('c.utilisateurs = :id')
             ->setParameter(':id', $id)
             ->getQuery()

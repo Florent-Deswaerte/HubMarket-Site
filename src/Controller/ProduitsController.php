@@ -32,25 +32,26 @@ class ProduitsController extends AbstractController
     {
         $produit = $this->produitsRepository->findOneById($id);
         $form = $this->createForm(ProduitsFormType::class);
-        $form->get('fournisseur')->setData("Fournisseur - {$produit->getFournisseurs()[0]->getLibelle()}");
-        $form->get('categorie')->setData("Catégorie - {$produit->getCategories()[0]->getNom()}");
-        $form->get('nom')->setData("Nom - {$produit->getNom()}");
+        $form->get('nom')->setData($produit->getNom());
         $form->get('qty')->setData($produit->getQty());
         $form->get('prix')->setData($produit->getPrix());
+        $form->get('description')->setData($produit->getDescription());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $fournisseurName = $form->get('fournisseur')->getData();
+            $fournisseurName = $form->get('fournisseur')->getData()->getLibelle();
             $qty = $form->get('qty')->getData();
             $prixProduit = $form->get('prix')->getData();
             $name = $form->get('nom')->getData();
-            $category = $form->get('categorie')->getData();
+            $category = $form->get('categorie')->getData()->getNom();
+            $description = $form->get('description')->getData();
             $response = $this->forward('App\Controller\ApiControllers\Produits\ProduitsApiController::patchProduit', [
                 'id'=>$id,
                 'fournisseur'=>$fournisseurName,
                 'qty'=>$qty,
                 'categorie'=>$category,
                 'nom'=>$name,
+                'description'=>$description,
                 'prix'=>$prixProduit
             ]);
             dd($response);
@@ -70,17 +71,18 @@ class ProduitsController extends AbstractController
         $form->handleRequest($request);
         $categories = $this->categoriesRepository->findAll();
         if ($form->isSubmitted() && $form->isValid()) {
-            $fournisseurName = $form->get('fournisseur')->getData();
+            $fournisseurName = $form->get('fournisseur')->getData()->getLibelle();
             $qty = $form->get('qty')->getData();
             $name = $form->get('nom')->getData();
-            $category = $form->get('categorie')->getData();
-            $category = $form->get('categorie')->getData();
+            $category = $form->get('categorie')->getData()->getNom();
             $prix = $form->get('prix')->getData();
+            $description = $form->get('description')->getData();
             $response = $this->forward('App\Controller\ApiControllers\Produits\ProduitsApiController::postProduit', [
                 'fournisseur'=>$fournisseurName,
                 'qty'=>$qty,
                 'categorie'=>$category,
                 'nom'=>$name,
+                'description'=>$description,
                 'prix'=>$prix
             ]);
             return $this->redirectToRoute('produits_index');

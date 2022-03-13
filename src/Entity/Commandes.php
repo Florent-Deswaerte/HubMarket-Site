@@ -119,19 +119,19 @@ class Commandes
     private $utilisateurs;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $stripe_token;
+    private $stripeToken;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $brand_stripe;
+    private $brandStripe;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $last4_stripe;
+    private $last4Stripe;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $id_charge_stripe;
+    private $idChargeStripe;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $status_stripe;
+    private $statusStripe;
 
     public function __construct()
     {
@@ -223,60 +223,60 @@ class Commandes
 
     public function getStripeToken(): ?string
     {
-        return $this->stripe_token;
+        return $this->stripeToken;
     }
 
-    public function setStripeToken(?string $stripe_token): self
+    public function setStripeToken(?string $stripeToken): self
     {
-        $this->stripe_token = $stripe_token;
+        $this->stripeToken = $stripeToken;
 
         return $this;
     }
 
     public function getBrandStripe(): ?string
     {
-        return $this->brand_stripe;
+        return $this->brandStripe;
     }
 
-    public function setBrandStripe(?string $brand_stripe): self
+    public function setBrandStripe(?string $brandStripe): self
     {
-        $this->brand_stripe = $brand_stripe;
+        $this->brandStripe = $brandStripe;
 
         return $this;
     }
 
     public function getLast4Stripe(): ?string
     {
-        return $this->last4_stripe;
+        return $this->last4Stripe;
     }
 
-    public function setLast4Stripe(?string $last4_stripe): self
+    public function setLast4Stripe(?string $last4Stripe): self
     {
-        $this->last4_stripe = $last4_stripe;
+        $this->last4Stripe = $last4Stripe;
 
         return $this;
     }
 
     public function getIdChargeStripe(): ?string
     {
-        return $this->id_charge_stripe;
+        return $this->idChargeStripe;
     }
 
-    public function setIdChargeStripe(?string $id_charge_stripe): self
+    public function setIdChargeStripe(?string $idChargeStripe): self
     {
-        $this->id_charge_stripe = $id_charge_stripe;
+        $this->idChargeStripe = $idChargeStripe;
 
         return $this;
     }
 
     public function getStatusStripe(): ?string
     {
-        return $this->status_stripe;
+        return $this->statusStripe;
     }
 
-    public function setStatusStripe(?string $status_stripe): self
+    public function setStatusStripe(?string $statusStripe): self
     {
-        $this->status_stripe = $status_stripe;
+        $this->statusStripe = $statusStripe;
 
         return $this;
     }

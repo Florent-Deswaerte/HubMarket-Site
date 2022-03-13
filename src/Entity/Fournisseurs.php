@@ -40,6 +40,18 @@ class Fournisseurs
         return $this->id;
     }
 
+    public function getData(): array
+    {
+        $data = array(
+            'id'=>$this->getId(),
+            'libelle'=>$this->getLibelle(),
+            'pays'=>$this->getPays(),
+            'addresse'=>$this->getAdresse(),
+            'cp'=>$this->getCodePostal(),
+        );
+        return $data;
+    }
+
     public function getLibelle(): ?string
     {
         return $this->Libelle;

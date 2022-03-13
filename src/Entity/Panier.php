@@ -141,7 +141,7 @@ class Panier
     }
 
     /**
-     * @return Collection|Produits[]
+     * @return Collection|Produits[]|null
      */
     public function getProduits(): Collection
     {

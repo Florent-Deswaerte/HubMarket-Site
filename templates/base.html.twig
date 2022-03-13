@@ -9,7 +9,7 @@
         <link rel="icon" href="{{ asset('img/icon.ico') }}">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
+            {# {{ encore_entry_link_tags('app') }} Webpack encore #}
             <!-- Google Font -->
             <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
             rel="stylesheet">
@@ -31,26 +31,16 @@
         <header class="header">
             <div class="header__top">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-7">
-                        <div class="header__top__left">
-                            <p>Livraison gratuite, retour sous 30 jours ou garantie de remboursement.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-5">
-                        <div class="header__top__right">
-                            <div class="header__top__links">
-                                {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
-                                    <a href="{{path('app_register')}}"> <img src="{{ asset('img/icon/add-user.png') }}" style="margin-right:10px;">Inscription</a>
-                                    <a href="{{path('app_login')}}"> <img src="{{ asset('img/icon/user.png') }}" style="margin-right:10px;">Connexion</a>
-                                {% else %}
-                                    <div class="row">
-                                        <p style="color:white;">{{ app.user.username }}</p>
-                                        <a href="{{path('app_logout')}}" style="margin-left:10px;"> <img src="{{ asset('img/icon/deconnexion.png') }}"></a>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
+                <div class="row justify-content-between align-items-center text-white">
+                    <span>Livraison gratuite, retour sous 30 jours ou garantie de remboursement.</span>
+                    <div class="d-flex align-items-center">
+                        {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <a href="{{ path('app_register') }}" class="mr-2"> <img src="{{ asset('img/icon/add-user.png') }}" class="mr-1">Inscription</a>
+                            <a href="{{ path('app_login') }}"> <img src="{{ asset('img/icon/user.png') }}" class="mr-1">Connexion</a>
+                        {% else %}
+                            <span>{{ app.user.username }}</span>
+                            <a href="{{ path('app_logout') }}" style="margin-left:10px;"> <img src="{{ asset('img/icon/deconnexion.png') }}"></a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -59,25 +49,29 @@
                 <div class="row">
                     <div class="col-lg-3 col-md-3">
                         <div class="header__logo">
-                            <a href="{{path('accueil')}}"><img src="{{ asset('img/logo.png') }}" alt=""></a>
+                            <a href="{{ path('accueil') }}"><img src="{{ asset('img/logo.png') }}" alt=""></a>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <nav class="header__menu mobile-menu">
                             <ul>
-                                <li class="active"><a href="{{path('accueil')}}">Accueil</a></li>
-                                <li><a href="{{path('produits_liste')}}">Shop</a></li>
+                                <li class="{% if app.request.attributes.get('_route') == 'accueil' %}active{% endif %}">
+                                    <a href="{{path('accueil')}}">Accueil</a>
+                                </li>
+                                <li class="{% if app.request.attributes.get('_route') == 'shop_index' %}active{% endif %}">
+                                    <a href="{{path('produits_liste')}}">Shop</a>
+                                </li>
                                 <li><a href="#">Pages</a>
                                     <ul class="dropdown">
-                                        <li><a href="./about.html">About Us</a></li>
-                                        <li><a href="./shop-details.html">Shop Details</a></li>
-                                        <li><a href="./shopping-cart.html">Shopping Cart</a></li>
-                                        <li><a href="./checkout.html">Check Out</a></li>
-                                        <li><a href="./blog-details.html">Blog Details</a></li>
+                                        <li><a href="#">About Us</a></li>
+                                        <li><a href="#">Shop Details</a></li>
+                                        <li><a href="#">Shopping Cart</a></li>
+                                        <li><a href="#">Check Out</a></li>
+                                        <li><a href="#">Blog Details</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="./blog.html">Blog</a></li>
-                                <li><a href="./contact.html">Contacts</a></li>
+                                <li><a href="#">Blog</a></li>
+                                <li><a href="#">Contacts</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -85,7 +79,7 @@
                         <div class="header__nav__option">
                             <a href="#" class="search-switch"><img src="{{ asset('img/icon/search.png') }}" alt=""></a>
                             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                                <a href="#"><img src="{{ asset('img/icon/compare.png') }}" alt=""></a>
+                                <a href="{{path('panier_historique_commande')}}"><img src="{{ asset('img/icon/compare.png') }}" alt=""></a>
                                 <a href="{{path('panier_index')}}"><img src="{{ asset('img/icon/cart.png') }}" alt=""></a>
                             {% endif %}
                         </div>
@@ -98,7 +92,7 @@
     {% block body %}
     {% endblock %}
     {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+            {# {{ encore_entry_script_tags('app') }} Webpack encore #}
             <!-- Js Plugins -->
             <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
             <script src="{{ asset('js/bootstrap.min.js') }}"></script>
@@ -110,7 +104,7 @@
             <script src="{{ asset('js/mixitup.min.js') }}"></script>
             <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
             <script src="{{ asset('js/main.js') }}"></script>
-            <script src="{{ asset('js/multi-select.js') }}"></script>
+            <script src="{{ asset('js/panier.js') }}"></script>
             <script src="//js.stripe.com/v3/"></script>
         {% endblock %}
     </body>

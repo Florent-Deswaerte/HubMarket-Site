@@ -3,13 +3,19 @@
 namespace App\Controller\ApiControllers;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Annotation\Route;
-
-use OpenApi\Annotations as OA;
 
 class APIUtilities extends AbstractController
 {
+    #[Route('/api/login', name: 'api_login', methods:['POST'])]
+    public function apiLogin(){
+        $user = $this->getUser();
+        return $this->json([
+            'email' => $user->getUserIdentifier(),
+            'roles' => $user->getRoles(),
+        ]);
+    }
+
     public function formatData($object)
     {
         $dataArray = array();

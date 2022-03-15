@@ -283,13 +283,17 @@ class Commandes
 
     public function getData(): array
     {
+        $lCommandes = array();
+        foreach($this->getCommandes() as $lCommande){
+            array_push($lCommandes, $lCommande->getData());
+        }
         $data = array(
             'id'=>$this->getId(),
             'date_commande'=>$this->getDateCommande(),
             'date_arrivee'=>$this->getDateArrivee(),
             'total_commande'=>$this->getTotalCommande(),
-            'utilisateurs'=>$this->getUtilisateurs(),
             'status'=>$this->getStatusStripe(),
+            'lCommandes'=>$lCommandes
         );
         return $data;
     }

@@ -337,7 +337,7 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
             'id'=>$this->id,
             'email'=>$this->email,
             'roles'=>$this->roles,
-            'panier'=>$this->panier,
+            'panier'=>$this->panier->getData(),
             'commande'=>$this->commande
         );
         return $data;

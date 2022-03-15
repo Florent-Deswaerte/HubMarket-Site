@@ -188,10 +188,13 @@ class Panier
 
     public function getData(): array
     {
+        $produits = array();
+        foreach($this->getProduits() as $produit){
+            array_push($produits, $produit->getData());
+        }
         $data = array(
-            'id'=>$this->id,
-            'utilisateurs'=>$this->utilisateurs,
-            'Produits'=>$this->Produits,
+            'id'=>$this->getId(),
+            'produits'=> $produits,
         );
         return $data;
     }

@@ -47,9 +47,7 @@ class OpenApiFactory implements OpenApiFactoryInterface {
         /* Appliquer le schéma de sécurité globalement
         $openApi = $openApi->withSecurity([['schema' => []]]);
         */
-
-        $openApi = $openApi->withSecurity([['bearerAuth' => []]]);
-
+        
         $openApiSchemas['Token'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [

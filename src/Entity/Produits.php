@@ -386,15 +386,21 @@ class Produits
 
     public function getData(): array
     {
+        $fournisseurs = array();
+        foreach($this->getFournisseurs() as $fournisseur){
+            array_push($fournisseurs, $fournisseur->getData());
+        }
+        $categories = array();
+        foreach($this->getCategories() as $categorie){
+            array_push($categories, $categorie->getData());
+        }
         $data = array(
             'id'=>$this->getId(),
             'nom'=>$this->getNom(),
             'qty'=>$this->getQty(),
             'prix'=>$this->getPrix(),
-            'produits'=>$this->getProduits(),
-            'fournisseurs'=>$this->getFournisseurs(),
-            'categories'=>$this->getCategories(),
-            'paniers'=>$this->getPaniers(),
+            'fournisseurs'=>$fournisseurs,
+            'categories'=>$categories,
         );
         return $data;
     }

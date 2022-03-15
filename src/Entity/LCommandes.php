@@ -86,8 +86,7 @@ class LCommandes
             'id'=>$this->getId(),
             'qty'=>$this->getQty(),
             'prix'=>$this->getPrix(),
-            'produits'=>$this->getProduits(),
-            'commandes'=>$this->getCommandes(),
+            'produits'=>$this->getProduits()->getData(),
         );
         return $data;
     }

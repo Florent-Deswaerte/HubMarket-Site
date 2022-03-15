@@ -333,12 +333,33 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getData(): array
     {
+        if(!is_null($this->getCommande())){
+            $commandes = array();
+            foreach($this->getCommande() as $commande){
+                array_push($commandes, $commande->getData());
+            }
+        }
+        else{
+            $commandes = null;
+        }
+        if(is_null($this->panier)){
+            $panier = null;
+        }
+        else{
+            $panier = $this->panier->getData();
+        }
         $data = array(
             'id'=>$this->id,
             'email'=>$this->email,
+            'nom'=>$this->nom,
+            'prenom'=>$this->prenom,
+            'phone'=>$this->phone,
+            'adresse'=>$this->adresse,
+            'pays'=>$this->pays,
+            'ville'=>$this->ville,
             'roles'=>$this->roles,
-            'panier'=>$this->panier,
-            'commande'=>$this->commande
+            'panier'=>$panier,
+            'commandes'=>$commandes
         );
         return $data;
     }

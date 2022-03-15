@@ -67,8 +67,12 @@ class Categories
         return $this;
     }
 
+<<<<<<< HEAD
     public function getData(): array
     {
+=======
+    public function getData(): array{
+>>>>>>> 3af4f2fc1969dc86e6b7dfcc2f14bd184e0da34f
         $data = array(
             'id'=>$this->getId(),
             'nom'=>$this->getNom(),

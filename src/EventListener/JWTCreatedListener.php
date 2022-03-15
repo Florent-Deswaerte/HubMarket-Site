@@ -32,29 +32,16 @@ class JWTCreatedListener   {
 
         $payload = $event->getData();
         $this->user = $this->utilisateursRepository->findOneByEmail($payload['username']);
-        $payload['id'] = $this->user->getId();
-        $payload['adresse'] = $this->user->getAdresse();
-        $payload['nom'] = $this->user->getNom();
-        $payload['prenom'] = $this->user->getPrenom();
-        $payload['phone'] = $this->user->getPhone();
-        $payload['pays'] = $this->user->getPays();
-        $payload['ville'] = $this->user->getVille();
-        if(!is_null($this->user->getCommande())){
-            $commandes = array();
-            foreach($this->user->getCommande() as $commande){
-                array_push($commandes, $commande->getData());
-            }
-            $payload['commandes'] = $commandes;
-        }
-        else{
-            $payload['commandes'] = null;
-        }
-        if(!is_null($this->user->getPanier())){
-            $payload['panier'] = $this->user->getPanier()->getData();
-        }
-        else{
-            $payload['panier'] = null;
-        }
+        $userData = $this->user->getData();
+        $payload['id'] = $userData['id'];
+        $payload['adresse'] = $userData['adresse'];
+        $payload['nom'] = $userData['nom'];
+        $payload['prenom'] = $userData['prenom'];
+        $payload['phone'] = $userData['phone'];
+        $payload['pays'] = $userData['pays'];
+        $payload['ville'] = $userData['ville'];
+        $payload['panier'] = $userData['panier'];
+        $payload['commandes'] = $userData['commandes'];
 
         $event->setData($payload);
 

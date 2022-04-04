@@ -289,8 +289,8 @@ class Commandes
         }
         $data = array(
             'id'=>$this->getId(),
-            'date_commande'=>$this->getDateCommande(),
-            'date_arrivee'=>$this->getDateArrivee(),
+            'date_commande'=>$this->getDateCommande()->format('Y-m-d H:i:s'),
+            'date_arrivee'=>$this->getDateArrivee()->format('Y-m-d H:i:s'),
             'total_commande'=>$this->getTotalCommande(),
             'status'=>$this->getStatusStripe(),
             'lCommandes'=>$lCommandes

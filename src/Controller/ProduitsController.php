@@ -107,13 +107,28 @@ class ProduitsController extends AbstractController
     public function listProduit(Request $request): Response
     {
         $response = $this->forward('App\Controller\ApiControllers\Produits\ProduitsApiController::getAllProduits');
-        dd($response);
-        return $this->render('produits/shop.html.twig');
-    }
+        $responseArr = (array) json_decode($response->getContent());
 
+        $responseCategories = $this->forward('App\Controller\ApiControllers\Categories\CategoriesApiController::getAllCategories');
+        $responseCategoriesArr = (array) json_decode($responseCategories->getContent());
+
+        $responseFournisseur = $this->forward('App\Controller\ApiControllers\Fournisseurs\FournisseursApiController::getAllFournisseurs');
+        $responseFournisseursArr = (array) json_decode($responseFournisseur->getContent());
+
+        return $this->render('produits/shop.html.twig', [
+            'produits'=>$responseArr['api:members'],
+            'categories'=>$responseCategoriesArr['api:members'],
+            'fournisseurs'=>$responseFournisseursArr['api:members'],
+        ]);
+
+    }
     #[Route('/details/{id}', name : 'details')]
     public function infoProduit(Request $request, int $id): Response
     {
-        return $this->render('produits/detailsProduit.html.twig');
+        $response = $this->forward('App\Controller\ApiControllers\Produits\ProduitsApiController::getAllProduits');
+        $responseArr = (array) json_decode($response->getContent());
+        return $this->render('produits/detailsProduit.html.twig', [
+            'produits'=>$responseArr['api:members'],
+        ]);
     }
 }

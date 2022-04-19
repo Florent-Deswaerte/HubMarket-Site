@@ -76,34 +76,32 @@
             </div>
             <div class="col-lg-9">
                 <div class="shop__product__option">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="shop__product__option__left">
-                                <p>Showing 1–12 of 126 results</p>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__left">
+                                    <p>Showing 1–12 of 126 results</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="shop__product__option__right">
-                                <p>Sort by Price:</p>
-                                <select style="display: none;">
-                                    <option value="">Low To High</option>
-                                    <option value="">High To Low</option>
-                                </select>
-                                <div class="nice-select" tabindex="0"><span class="current">Low To High</span>
-                                    <ul class="list">
-                                        <li data-value="" class="option selected">Low To High</li>
-                                        <li data-value="" class="option">High To Low</li>
-                                    </ul>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__right">
+                                    <p>Sort by Price:</p>
+                                    <select>
+                                        <option value="">Low To High</option>
+                                        <option value="">$0 - $55</option>
+                                        <option value="">$55 - $100</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
+
+                <div class="row item">
                     {% for produit in produits %}
                     <div class="col-lg-4 col-md-6 col-sm-6 produits">
                         <div class="product__item sale">
+                        <a href="{{ path('produits_details', {'id' : produit.id }) }}">
                             <img src="http://s4-8014.nuage-peda.fr/Hubmarket/src/Assets/Images/téléchargé.jpg">
+                        </a>
                             <div class="product__item__text">
                                 <h6>{{ produit.nom }}</h6>
                                 <a href="#" class="add-cart">+ Add To Cart</a>
@@ -119,17 +117,6 @@
     </div>
 </section>
 <!-- Shop Section End -->
-
-<!-- Search Begin -->
-<div class="search-model">
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <div class="search-close-switch">+</div>
-        <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here.....">
-        </form>
-    </div>
-</div>
-<!-- Search End -->
 
 </html>
 

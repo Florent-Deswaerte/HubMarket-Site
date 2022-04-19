@@ -399,8 +399,10 @@ class Produits
             'nom'=>$this->getNom(),
             'qty'=>$this->getQty(),
             'prix'=>$this->getPrix(),
+            'description'=>$this->getDescription(),
             'fournisseurs'=>$fournisseurs,
             'categories'=>$categories,
+
         );
         return $data;
     }

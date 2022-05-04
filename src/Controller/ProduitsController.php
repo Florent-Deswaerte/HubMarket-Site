@@ -127,8 +127,17 @@ class ProduitsController extends AbstractController
     {
         $response = $this->forward('App\Controller\ApiControllers\Produits\ProduitsApiController::getAllProduits');
         $responseArr = (array) json_decode($response->getContent());
+        $produit = array_filter($responseArr['api:members'], function($obj) use ($id) {
+            return $obj->id == $id;
+        });
+        $produit = reset($produit);
+        $catProduit = $produit->categories[0]->nom;
+
+
         return $this->render('produits/detailsProduit.html.twig', [
             'produits'=>$responseArr['api:members'],
+            'monProduit'=>$produit,
+            'catProduit'=>$catProduit,
         ]);
     }
 }

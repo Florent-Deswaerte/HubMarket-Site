@@ -3,8 +3,6 @@
 {% block title %}{{parent()}}Produits - Details{% endblock %}
 
 {% block body %}
-{% for produit in produits %}
-{% if produit.id ==  app.request.get('id') %}
 <!-- Shop Details Section Begin -->
 <section class="shop-details">
     <div class="product__details__pic">
@@ -14,7 +12,7 @@
                     <div class="product__details__breadcrumb">
                         <a href={{ path('accueil') }}>Hubmarket</a>
                         <a href={{path('produits_liste')}}>Shop</a>
-                        <span>{{produit.nom}}</span>
+                        <span>{{monProduit.nom}}</span>
                     </div>
                 </div>
             </div>
@@ -69,22 +67,24 @@
             </div>
         </div>
     </div>
+
     <div class="product__details__content">
         <div class="container">
             <div class="row d-flex justify-content-center">
                 <div class="col-lg-8">
                     <div class="product__details__text">
-                        <h4>{{produit.nom}}</h4>
-                        <h3>{{produit.prix}}</h3>
-                        <p>{{produit.description}}</p>
+                        <h4>{{monProduit.nom}}</h4>
+                        <h3>{{monProduit.prix}}</h3>
+                        <p>{{monProduit.description}}</p>
                         <div class="product__details__cart__option">
-                            <a href="#" class="primary-btn">add to cart</a>
+                            <a href="{{ path('panier_ajoutProduit', {'id': monProduit.id})}}" class="primary-btn">add to
+                                cart</a>
                         </div>
                         <div class="product__details__last__option">
                             <h5><span>Guaranteed Safe Checkout</span></h5>
                             <img src="img/shop-details/details-payment.png" alt="">
                             <ul>
-                                <li><span>Remaining:</span> {{produit.qty}}</li>
+                                <li><span>Remaining:</span> {{monProduit.qty}}</li>
                                 <li><span>Categories:</span> ? </li>
                             </ul>
                         </div>
@@ -94,8 +94,11 @@
         </div>
     </div>
 </section>
+{{catProduit}}
 <!-- Shop Details Section End -->
-{% endif %}
+
+{% for produit in produits %}
+
 {% endfor %}
 <!-- Related Section Begin -->
 <section class="related spad">

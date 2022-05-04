@@ -66,6 +66,15 @@ use Doctrine\Common\Collections\ArrayCollection;
                             'type' => 'integer'
                         ]
                     ],
+                    [
+                        'in' => 'query',
+                        'name' => 'prix',
+                        'description' => 'prix du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ],
                 ],
                 'requestBody' => [
                     'content' => [],
@@ -138,6 +147,16 @@ use Doctrine\Common\Collections\ArrayCollection;
                             'type' => 'integer'
                         ]
                     ],
+                    [
+                        'in' => 'query',
+                        'name' => 'prix',
+                        'description' => 'prix du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ],
+                    
                 ],
                 'requestBody' => [
                     'content' => [],

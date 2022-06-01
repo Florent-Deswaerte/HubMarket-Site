@@ -77,13 +77,15 @@ class ProduitsController extends AbstractController
             $category = $form->get('categorie')->getData()->getNom();
             $prix = $form->get('prix')->getData();
             $description = $form->get('description')->getData();
+            $imagePath = $form->get('imagePath')->getData();
             $response = $this->forward('App\Controller\ApiControllers\Produits\ProduitsApiController::postProduit', [
                 'fournisseur'=>$fournisseurName,
                 'qty'=>$qty,
                 'categorie'=>$category,
                 'nom'=>$name,
                 'description'=>$description,
-                'prix'=>$prix
+                'prix'=>$prix,
+                'imagePath'=>$imagePath,
             ]);
             return $this->redirectToRoute('produits_index');
         }
@@ -99,7 +101,6 @@ class ProduitsController extends AbstractController
         $response = $this->forward('App\Controller\ApiControllers\Produits\ProduitsApiController::deleteProduit', [
             'id'=>$id,
         ]);
-        dd($response);
         return $this->redirectToRoute('produits_index');
     }
 

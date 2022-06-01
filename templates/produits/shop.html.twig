@@ -100,7 +100,7 @@
                     <div class="col-lg-4 col-md-6 col-sm-6 produits">
                         <div class="product__item sale">
                         <a href="{{ path('produits_details', {'id' : produit.id }) }}">
-                            <img src="http://s4-8014.nuage-peda.fr/Hubmarket/src/Assets/Images/téléchargé.jpg">
+                            <img src="{{ produit.imagePath }}">
                         </a>
                             <div class="product__item__text">
                                 <h6>{{ produit.nom }}</h6>

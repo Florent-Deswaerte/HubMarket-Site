@@ -40,6 +40,7 @@ class ProduitsFormType extends AbstractType
                 },
                 'choice_label' => 'nom',
             ])
+            ->add('imagePath', TextType::class, ['required' => true, 'attr'=>['placeholder' => 'Emplacement de image']])
             ->add('Submit', SubmitType::class)
         ;
     }

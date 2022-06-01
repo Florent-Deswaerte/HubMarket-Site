@@ -6,8 +6,10 @@ use App\Repository\FournisseursRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ORM\Entity(repositoryClass: FournisseursRepository::class)]
+#[ApiResource]
 class Fournisseurs
 {
     #[ORM\Id]
@@ -46,7 +48,7 @@ class Fournisseurs
             'id'=>$this->getId(),
             'libelle'=>$this->getLibelle(),
             'pays'=>$this->getPays(),
-            'addresse'=>$this->getAdresse(),
+            'adresse'=>$this->getAdresse(),
             'cp'=>$this->getCodePostal(),
         );
         return $data;

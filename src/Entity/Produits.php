@@ -86,8 +86,8 @@ use Doctrine\Common\Collections\ArrayCollection;
                     ],
                     [
                         'in' => 'query',
-                        'name' => 'image-path',
-                        'description' => 'dossier de image du produit',
+                        'name' => 'imagePath',
+                        'description' => "dossier de l'image du produit",
                         'required' => true,
                         'schema' => [
                             'type' => 'string'

@@ -50,7 +50,6 @@ class ProduitsApiController extends AbstractController
         $produit->setQty($qtyProduit);
         $produit->setImagePath($imagePathProduit);
         
-        
         $fournisseur = $this->fournisseursRepository->findOneByLibelle($nomFournisseur);
         if(!is_null($fournisseur)) {
             $produit->addFournisseur($fournisseur); 

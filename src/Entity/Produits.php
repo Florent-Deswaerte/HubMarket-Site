@@ -470,4 +470,10 @@ class Produits
 
         return $this;
     }
+
+    public function setCategories(Collection $categories): self
+    {
+        $this->Categories = $categories;
+        return $this;
+    }
 }

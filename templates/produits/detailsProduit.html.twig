@@ -29,17 +29,19 @@
                                 <h4>{{monProduit.nom}}</h4>
                                 <h3>{{monProduit.prix}}</h3>
                                 <p>{{monProduit.description}}</p>
-                                <div class="product__details__cart__option">
-                                    <a href="{{ path('panier_ajoutProduit', {'id': monProduit.id})}}"
-                                        class="primary-btn">add to
-                                        cart</a>
-                                </div>
+                                {% if monProduit.qty > 0 %}
+                                    <div class="product__details__cart__option">
+                                        <a href="{{ path('panier_ajoutProduit', {'id': monProduit.id})}}"
+                                            class="primary-btn">Ajouter au panier</a>
+                                    </div>
+                                    {% else %}
+                                    <span> Le produit n'est plus en stock </span>
+                                {% endif %}
                                 <div class="product__details__last__option">
-                                    <h5>Guaranteed Safe Checkout</h5>
                                     <img src="img/shop-details/details-payment.png" alt="">
                                     <ul>
-                                        <li><span>Remaining:</span> {{monProduit.qty}}</li>
-                                        <li><span>Categories:</span> ? </li>
+                                        <li><span>Restant:</span> {{monProduit.qty}}</li>
+                                        <li><span>Categories:</span> {{catProduit}} </li>
                                     </ul>
                                 </div>
                             </div>
@@ -52,13 +54,7 @@
 
 
 </section>
-{{catProduit}}
-<!-- Shop Details Section End -->
 
-{% for produit in produits %}
-
-{% endfor %}
-<!-- Related Section Begin -->
 <section class="related spad">
     <div class="container">
         <div class="row">

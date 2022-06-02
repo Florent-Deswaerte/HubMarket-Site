@@ -48,6 +48,24 @@ class PanierController extends AbstractController
         ]);
     }
 
+
+
+    #[Route('/ajoutProduit/{id}', name: 'ajoutProduit')]
+    public function addProduit(Produits $produit) : Response
+    {
+        
+        $panier = $this->getUser()->getPanier();
+        if ($panier == null){
+            $response = $this->forward('App\Controller\ApiControllers\Paniers\PaniersApiController::postPanier');
+        }
+        $panier->addProduit($produit);
+   
+        $this->entityManager->persist($panier);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('panier_index');
+    }
+
     // Supprimer un produit du panier
     #[Route('/delete/{id}', name: 'delete')]
     //ParametreConverter qui prend l'id dans l'url et fait la relation avec l'entité

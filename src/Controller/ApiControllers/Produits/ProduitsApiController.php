@@ -21,6 +21,7 @@ class ProduitsApiController extends AbstractController
     private $utilities;
     private $fournisseursRepository;
     private $categoriesRepository;
+    private $imagePathProduit;
 
     public function __construct(ProduitsRepository $produitsRepository, APIUtilities $apiUtilities, HelperController $utilities, FournisseursRepository $fournisseursRepository, CategoriesRepository $categoriesRepository)
     {
@@ -41,10 +42,14 @@ class ProduitsApiController extends AbstractController
         $qtyProduit = $request->get('qty');
         $prixProduit = $request->get('prix');
         $descriptionProduit = $request->get('description');
+        $imagePathProduit = $request->get('imagePath');
+
         $produit->setDescription($descriptionProduit);
         $produit->setPrix($prixProduit);
         $produit->setNom($nomProduit);
         $produit->setQty($qtyProduit);
+        $produit->setImagePath($imagePathProduit);
+        
         $fournisseur = $this->fournisseursRepository->findOneByLibelle($nomFournisseur);
         if(!is_null($fournisseur)) {
             $produit->addFournisseur($fournisseur); 
@@ -72,17 +77,21 @@ class ProduitsApiController extends AbstractController
         if(is_null($produit)) {
             return $this->apiUtilities->NotFoundResponse("Aucun produit avec cet identifiant trouvé");
         }
+
         $nomFournisseur = $request->get('fournisseur');
         $nomCategorie = $request->get('categorie');
         $nomProduit = $request->get('nom');
         $qtyProduit = $request->get('qty');
         $descriptionProduit = $request->get('description');
         $prixProduit = $request->get('prix');
-        $produit->setPrix($prixProduit);
+
+        $fournisseur = $this->fournisseursRepository->findOneByLibelle($nomFournisseur);
+
         $produit->setNom($nomProduit);
         $produit->setQty($qtyProduit);
         $produit->setDescription($descriptionProduit);
-        $fournisseur = $this->fournisseursRepository->findOneByLibelle($nomFournisseur);
+        $produit->setPrix($prixProduit);
+        
         if(!is_null($fournisseur)) {
             $produit->addFournisseur($fournisseur);
             $categorie = $this->categoriesRepository->findOneByName($nomCategorie);

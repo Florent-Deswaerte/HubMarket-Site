@@ -51,25 +51,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
-                                <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
-                                </div>
-                                <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__price">
-                                            <ul>
-                                                <li><a href="#">$0.00 - $50.00</a></li>
-                                                <li><a href="#">$50.00 - $100.00</a></li>
-                                                <li><a href="#">$100.00 - $150.00</a></li>
-                                                <li><a href="#">$150.00 - $200.00</a></li>
-                                                <li><a href="#">$200.00 - $250.00</a></li>
-                                                <li><a href="#">250.00+</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -87,8 +68,7 @@
                                     <p>Sort by Price:</p>
                                     <select>
                                         <option value="">Low To High</option>
-                                        <option value="">$0 - $55</option>
-                                        <option value="">$55 - $100</option>
+                                        <option value="">High To Low</option>
                                     </select>
                                 </div>
                             </div>
@@ -100,12 +80,13 @@
                     <div class="col-lg-4 col-md-6 col-sm-6 produits">
                         <div class="product__item sale">
                         <a href="{{ path('produits_details', {'id' : produit.id }) }}">
-                            <img src="http://s4-8014.nuage-peda.fr/Hubmarket/src/Assets/Images/téléchargé.jpg">
+                            <img src="{{ produit.imagePath }}">
                         </a>
                             <div class="product__item__text">
-                                <h6>{{ produit.nom }}</h6>
-                                <a href="#" class="add-cart">+ Add To Cart</a>
+                                <h6>{{ produit.nom }}</h6> 
+                                    <a href="#" class="add-cart">+ Add To Cart</a> 
                                 <h5>{{ produit.prix }}</h5>
+                                <span>Restant : {{ produit.qty }}</span>
                             </div>
                         </div>
                     </div>

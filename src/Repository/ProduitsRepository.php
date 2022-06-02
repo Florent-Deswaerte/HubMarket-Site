@@ -34,6 +34,18 @@ class ProduitsRepository extends ServiceEntityRepository
     }
 
     /**
+    * @return Produits[]|null Returns an array of Produits objects
+    */
+    public function findProduitsByFournisseur($value)
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT p FROM App\Entity\Produits p INNER JOIN p.Fournisseurs f WHERE f.Libelle = :val ORDER BY p.id ASC'
+        )->setParameter('val', $value);
+        return $query->getResult();
+    }
+
+    /**
     * @return Produits|null Returns an array of Produits objects
     */
     public function findOneByName($value): ?Produits

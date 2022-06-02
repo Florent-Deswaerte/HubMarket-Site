@@ -84,6 +84,8 @@ class ProduitsApiController extends AbstractController
         $qtyProduit = $request->get('qty');
         $descriptionProduit = $request->get('description');
         $prixProduit = $request->get('prix');
+        $imagePathProduit = $request->get('imagePath');
+
 
         $fournisseur = $this->fournisseursRepository->findOneByLibelle($nomFournisseur);
 
@@ -91,6 +93,8 @@ class ProduitsApiController extends AbstractController
         $produit->setQty($qtyProduit);
         $produit->setDescription($descriptionProduit);
         $produit->setPrix($prixProduit);
+        $produit->setImagePath($imagePathProduit);
+
         
         if(!is_null($fournisseur)) {
             $produit->addFournisseur($fournisseur);
@@ -152,6 +156,18 @@ class ProduitsApiController extends AbstractController
     #[Route("/api/produits", name: 'apiGetProduits', methods: 'GET')]
     public function getAllProduits(){
         $produits = $this->produitsRepository->findBy(array(), array('id'=>'ASC'));
+        if(empty($produits)){
+            return $this->apiUtilities->EmptyResponse("La liste est vide!");
+        }
+        $data = $this->apiUtilities->formatDataArray($produits);
+        $responseArray = array('api:responseCode'=>200, 'api:responseInfo' => "La liste des produits a bien été envoyée", 'api:membersCount'=>count($produits),'api:members' => $data ); 
+        return $this->apiUtilities->JSONResponseOk($responseArray);
+    }
+
+    // GET
+    #[Route("/api/produits/fournisseur/{fournisseur}", name: 'apiGetProduitsByFournisseur', methods: 'GET')]
+    public function getProduitsFromFournisseur(string $fournisseur){
+        $produits = $this->produitsRepository->findProduitsByFournisseur($fournisseur);
         if(empty($produits)){
             return $this->apiUtilities->EmptyResponse("La liste est vide!");
         }

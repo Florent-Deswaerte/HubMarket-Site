@@ -22,6 +22,27 @@ use Doctrine\Common\Collections\ArrayCollection;
                 'parameters' => [],
             ],
         ],
+        'getByFournisseur' => [
+            'method' => 'GET',
+            'path' => '/produits/fournisseur/{fournisseur}',
+            'route_name' => 'apiGetProduitsByFournisseur',
+            'filters' => [],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'summary' => 'Récupère la liste des produits du fournisseur',
+                'parameters' => [
+                    [
+                        'in' => 'path',
+                        'name' => 'fournisseur',
+                        'description' => 'Nom du fournisseur',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ],
+                ],
+            ],
+        ],
         'post' => [
             'method' => 'POST',
             'path' => '/produits',
@@ -167,6 +188,15 @@ use Doctrine\Common\Collections\ArrayCollection;
                     ],
                     [
                         'in' => 'query',
+                        'name' => 'description',
+                        'description' => 'Description du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ],
+                    [
+                        'in' => 'query',
                         'name' => 'prix',
                         'description' => 'prix du produit',
                         'required' => true,
@@ -174,7 +204,15 @@ use Doctrine\Common\Collections\ArrayCollection;
                             'type' => 'integer'
                         ]
                     ],
-                    
+                    [
+                        'in' => 'query',
+                        'name' => 'imagePath',
+                        'description' => 'Image du produit',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ],
                 ],
                 'requestBody' => [
                     'content' => [],

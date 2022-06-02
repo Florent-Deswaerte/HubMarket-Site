@@ -30,29 +30,65 @@ class FournisseursApiController extends AbstractController
         return $this->apiUtilities->JSONResponseOk($responseArray);
     }
 
-    // GET (by libelle)
-    #[Route("/api/fournisseurs/libelle/{libelle}", name: 'apiGetFournisseurByName', methods: 'GET')]
-    public function getFournisseurByLibelle(string $libelle){
-        $fournisseur = $this->fournisseursRepository->findO($libelle);
+    // GET (by id)
+    #[Route("/api/fournisseurs/id/{id}", name: 'apiGetFournisseurById', methods: 'GET')]
+    public function getFournisseurById(int $id){
+        $fournisseur = $this->fournisseursRepository->findOneById($id);
         if(empty($fournisseur)){
             return $this->apiUtilities->NotFoundResponse("La liste est vide!");
         }
-        $data = $this->apiUtilities->formatDataArray($fournisseur);
-        $responseArray = array('api:responseCode'=>200, 'api:responseInfo' => "La liste des fournisseurs a bien été envoyée", 'api:membersCount'=>count($fournisseur),'api:members' => $data ); 
+        $data = $this->apiUtilities->formatData($fournisseur);
+        $responseArray = array('api:responseCode'=>200, 'api:responseInfo' => "Le fournisseur a été trouvé", 'api:membersCount'=>1,'api:members' => $data ); 
+        return $this->apiUtilities->JSONResponseOk($responseArray);
+    }
+
+    // GET (by libelle)
+    #[Route("/api/fournisseurs/libelle/{libelle}", name: 'apiGetFournisseurByName', methods: 'GET')]
+    public function getFournisseurByLibelle(string $libelle){
+        $fournisseur = $this->fournisseursRepository->findOneByLibelle($libelle);
+        if(empty($fournisseur)){
+            return $this->apiUtilities->NotFoundResponse("La liste est vide!");
+        }
+        $data = $this->apiUtilities->formatData($fournisseur);
+        $responseArray = array('api:responseCode'=>200, 'api:responseInfo' => "Le fournisseur a été trouvé", 'api:membersCount'=>1,'api:members' => $data ); 
+        return $this->apiUtilities->JSONResponseOk($responseArray);
+    }
+
+    // GET (by email)
+    #[Route("/api/fournisseurs/email/{email}", name: 'apiGetFournisseurByEmail', methods: 'GET')]
+    public function getFournisseurByEmail(string $email){
+        $fournisseur = $this->fournisseursRepository->findOneByEmail($email);
+        if(empty($fournisseur)){
+            return $this->apiUtilities->NotFoundResponse("La liste est vide!");
+        }
+        $data = $this->apiUtilities->formatData($fournisseur);
+        $responseArray = array('api:responseCode'=>200, 'api:responseInfo' => "Le fournisseur a été trouvé", 'api:membersCount'=>1,'api:members' => $data ); 
         return $this->apiUtilities->JSONResponseOk($responseArray);
     }
 
     // POST
-    #[Route("/api/fournisseur", name: 'apiPostFournisseur', methods: 'POST')]
+    #[Route("/api/fournisseurs", name: 'apiPostFournisseur', methods: 'POST')]
     public function postFournisseur(Request $request){
         $fournisseur = new Fournisseurs(); //
         $libelleFournisseur = $request->get('libelle');
-        $foundFournisseur = $this->fournisseursRepository->findOneByLibelle($libelleFournisseur);
-        if(!is_null($foundFournisseur)) {
+        $codePostalFournisseur = $request->get('codePostal');
+        $emailFournisseur = $request->get('email');
+        $paysFournisseur = $request->get('pays');
+        $adresseFournisseur = $request->get('adresse');
+        $foundFournisseurByLibelle = $this->fournisseursRepository->findOneByLibelle($libelleFournisseur);
+        $foundFournisseurByEmail = $this->fournisseursRepository->findOneByEmail($emailFournisseur);
+        if(!is_null($foundFournisseurByLibelle)) {
             return $this->apiUtilities->BadRequestResponse("Un fournisseur possédant ce libelle existe déjà!");
+        }
+        else if(!is_null($foundFournisseurByEmail)) {
+            return $this->apiUtilities->BadRequestResponse("Un fournisseur possédant cet email existe déjà!");
         }
         else {
             $fournisseur->setLibelle($libelleFournisseur);
+            $fournisseur->setAdresse($adresseFournisseur);
+            $fournisseur->setCodePostal($codePostalFournisseur);
+            $fournisseur->setPays($paysFournisseur);
+            $fournisseur->setEmail($emailFournisseur);
             $this->helper->saveEntityObject($fournisseur);
             $data = $this->apiUtilities->formatData($fournisseur);
             $responseArray = array('api:responseCode'=>Response::HTTP_CREATED, 'api:responseInfo' => "Le fournisseur a bien été créé", 'api:membersCount'=>1,'api:members' => $data ); 
@@ -61,7 +97,7 @@ class FournisseursApiController extends AbstractController
     }
 
     // PATCH
-    #[Route("/api/fournisseur/{id}", name: 'apiPatchFournisseur', methods: 'POST')]
+    #[Route("/api/fournisseurs/{id}", name: 'apiPatchFournisseur', methods: 'POST')]
     public function patchFournisseur(Request $request, int $id){
         $libelleFournisseur = $request->get('libelle');
         $oldFournisseur = $this->fournisseursRepository->findOneById($id);

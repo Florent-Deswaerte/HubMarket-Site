@@ -74,6 +74,20 @@ class FournisseursRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+    * @return Fournisseurs|null Returns an array of Fournisseurs objects
+    */
+    public function findOneByEmail($value): ?Fournisseurs
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.email = :val')
+            ->setParameter('val', $value)
+            ->orderBy('f.id', 'ASC')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     // /**
     //  * @return Fournisseurs[] Returns an array of Fournisseurs objects
     //  */

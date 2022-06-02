@@ -201,7 +201,7 @@ use Doctrine\Common\Collections\ArrayCollection;
                         'description' => 'prix du produit',
                         'required' => true,
                         'schema' => [
-                            'type' => 'integer'
+                            'type' => 'string'
                         ]
                     ],
                     [
